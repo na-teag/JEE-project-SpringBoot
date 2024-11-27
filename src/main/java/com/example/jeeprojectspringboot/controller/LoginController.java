@@ -19,15 +19,18 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-
-    @GetMapping({"/login", "/logout"})
-    public String loginOrLogout(HttpSession session, String action) {
-        if ("logout".equals(action)) {
-            session.invalidate();
+    @GetMapping("/login")
+    public String login(HttpSession session) {
+        if (session.getAttribute("user") != null) {
             return "redirect:/";
-        } else {
-            return "login";
         }
+        return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 
     @PostMapping("/login")

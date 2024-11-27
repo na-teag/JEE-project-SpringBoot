@@ -34,10 +34,10 @@
 
     <c:choose>
       <c:when test="${not empty user}">
-        <li><a href="${pageContext.request.contextPath}/logout?action=logout">Déconnexion</a></li>
+        <li><a href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
       </c:when>
       <c:otherwise>
-        <li><a href="${pageContext.request.contextPath}/login?action=login">Connexion</a></li>
+        <li><a href="${pageContext.request.contextPath}/login">Connexion</a></li>
       </c:otherwise>
     </c:choose>
   </ul>
