@@ -2,6 +2,7 @@ package com.example.jeeprojectspringboot;
 
 import com.example.jeeprojectspringboot.schoolmanager.Address;
 import com.example.jeeprojectspringboot.service.AddressService;
+import com.example.jeeprojectspringboot.service.DataCleanupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +16,9 @@ public class Main extends SpringBootServletInitializer implements CommandLineRun
 	@Autowired
 	private AddressService addressService; // Injection du service
 
+	@Autowired
+	private DataCleanupService dataCleanupService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
 	}
@@ -26,6 +30,13 @@ public class Main extends SpringBootServletInitializer implements CommandLineRun
 
 	@Override
 	public void run(String... args) throws Exception {
+		//resetDatabase();
+	}
+
+	public void resetDatabase(){
+		// Supprimer toutes les instances
+		dataCleanupService.deleteAllEntities();
+
 		// Créer une nouvelle adresse à ajouter
 		Address address = new Address();
 		address.setNumber("123");
@@ -36,9 +47,6 @@ public class Main extends SpringBootServletInitializer implements CommandLineRun
 
 		// Sauvegarder l'adresse dans la base de données via le service
 		Address savedAddress = addressService.addAddress(address);
-
-		// Afficher l'adresse ajoutée
-		System.out.println("Adresse ajoutée : " + savedAddress);
 	}
 
 }

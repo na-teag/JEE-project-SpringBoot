@@ -13,4 +13,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     String findMaxPersonNumber();
 
     Person findByUsername(String username);
+
+    Person findById(long id);
 }
