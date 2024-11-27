@@ -34,8 +34,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password,
-                        HttpSession session, Model model) {
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session, Model model) {
         // Mapping des rôles
         Map<String, String> roles = new HashMap<>();
         roles.put("admin", Admin.class.getName());
