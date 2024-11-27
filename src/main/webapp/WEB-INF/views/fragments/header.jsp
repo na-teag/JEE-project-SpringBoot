@@ -15,7 +15,7 @@
 <nav>
   <ul>
     <li><a href="${pageContext.request.contextPath}/">Accueil</a></li>
-    <li><a href="${pageContext.request.contextPath}/views/contact.jsp">Contacts</a></li>
+    <li><a href="${pageContext.request.contextPath}/contact">Contacts</a></li>
 
     <c:choose>
       <c:when test="${not empty role and role == roles.student}">
