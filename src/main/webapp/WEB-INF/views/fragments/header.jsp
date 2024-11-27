@@ -27,7 +27,7 @@
         <li><a href="${pageContext.request.contextPath}/schedule">Emploi du temps</a></li>
       </c:when>
       <c:when test="${not empty role and role == roles.admin}">
-        <li><a href="${pageContext.request.contextPath}/views/indexAdmin.jsp">éditer des objets</a></li>
+        <li><a href="${pageContext.request.contextPath}/indexAdmin">éditer des objets</a></li>
         <li><a href="${pageContext.request.contextPath}/schedule">Emploi du temps</a></li>
       </c:when>
     </c:choose>
