@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -17,28 +18,26 @@
     <li><a href="${pageContext.request.contextPath}/views/contact.jsp">Contacts</a></li>
 
     <c:choose>
-      <c:when test="${not empty sessionScope.roles and sessionScope.role == sessionScope.roles.student}">
+      <c:when test="${not empty role and role == roles.student}">
         <li><a href="${pageContext.request.contextPath}/grades">Notes</a></li>
         <li><a href="${pageContext.request.contextPath}/schedule">Emploi du temps</a></li>
       </c:when>
-
-      <c:when test="${not empty sessionScope.roles and sessionScope.role == sessionScope.roles.professor}">
+      <c:when test="${not empty role and role == roles.professor}">
         <li><a href="${pageContext.request.contextPath}/gradesManagement">Saisie des notes</a></li>
         <li><a href="${pageContext.request.contextPath}/schedule">Emploi du temps</a></li>
       </c:when>
-
-      <c:when test="${not empty sessionScope.roles and sessionScope.role == sessionScope.roles.admin}">
+      <c:when test="${not empty role and role == roles.admin}">
         <li><a href="${pageContext.request.contextPath}/views/indexAdmin.jsp">éditer des objets</a></li>
         <li><a href="${pageContext.request.contextPath}/schedule">Emploi du temps</a></li>
       </c:when>
     </c:choose>
 
     <c:choose>
-      <c:when test="${not empty sessionScope.user}">
-        <li><a href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
+      <c:when test="${not empty user}">
+        <li><a href="${pageContext.request.contextPath}/logout?action=logout">Déconnexion</a></li>
       </c:when>
       <c:otherwise>
-        <li><a href="${pageContext.request.contextPath}/login">Connexion</a></li>
+        <li><a href="${pageContext.request.contextPath}/login?action=login">Connexion</a></li>
       </c:otherwise>
     </c:choose>
   </ul>
