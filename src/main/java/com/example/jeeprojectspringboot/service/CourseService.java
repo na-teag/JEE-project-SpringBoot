@@ -5,10 +5,7 @@ import com.example.jeeprojectspringboot.schoolmanager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CourseService {
@@ -25,19 +22,19 @@ public class CourseService {
         List<Course> courses = new ArrayList<>();
 
         // Récupération des cours pour la classe de l'étudiant
-        List<Course> tmp = courseRepository.findByStudentGroup(studentClasse);
+        List<Course> tmp = courseRepository.findByStudentGroupsContaining(studentClasse);
         if (tmp != null) {
             courses.addAll(tmp);
         }
 
         // Récupération des cours pour la promo de l'étudiant
-        tmp = courseRepository.findByStudentGroup(studentPromo);
+        tmp = courseRepository.findByStudentGroupsContaining(studentPromo);
         if (tmp != null) {
             courses.addAll(tmp);
         }
 
         // Récupération des cours pour le pathway de l'étudiant
-        tmp = courseRepository.findByStudentGroup(studentPathway);
+        tmp = courseRepository.findByStudentGroupsContaining(studentPathway);
         if (tmp != null) {
             courses.addAll(tmp);
         }
@@ -57,5 +54,9 @@ public class CourseService {
 
     public List<Course> getCoursesOfProfessor(Professor professor) {
         return courseRepository.findByProfessor(professor);
+    }
+
+    public Course getSelectedCourse(long id){
+        return courseRepository.findById(id);
     }
 }
