@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 public interface PathwayRepository  extends JpaRepository<Pathway, Long> {
 	Pathway findById(long id);
+
 	List<Pathway> findAll();
+
 	Pathway save(Pathway pathway);
+
 	void deleteById(long id);
 }

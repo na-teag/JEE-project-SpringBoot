@@ -23,6 +23,21 @@ public class PersonService {
         return personRepository.findByUsername(username); // Appel à la méthode générée par Spring Data JPA
     }
 
+    public Person getUserById(Long id) {
+        return personRepository.findById(id).orElse(null);
+    }
+
+    public Person getUserByPersonNumber(String personNumber) {
+        return personRepository.findByPersonNumber(personNumber);
+    }
+
+
+    /*
+     * There is no function to delete a Person, because of specific action that must be done when deleting a specific type of person
+     * See deleteStudent and deleteProfessor
+     */
+
+
     @Transactional
     public void setPersonNumber(Person person) {
         if (person.getPersonNumber() == null) {

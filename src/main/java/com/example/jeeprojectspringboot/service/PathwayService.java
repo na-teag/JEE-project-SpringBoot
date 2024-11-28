@@ -9,6 +9,7 @@ import jakarta.validation.Validator;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class PathwayService {
 		return pathwayRepository.findAll();
 	}
 
+	@Transactional
 	public Pathway save(Pathway pathway) {
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<Pathway>> errors = validator.validate(pathway);
@@ -41,6 +43,7 @@ public class PathwayService {
 		return pathwayRepository.save(pathway);
 	}
 
+	@Transactional
 	public void deletePathway(Long id) {
 		pathwayRepository.deleteById(id);
 	}

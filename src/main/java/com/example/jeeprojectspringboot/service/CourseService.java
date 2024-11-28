@@ -25,19 +25,19 @@ public class CourseService {
         List<Course> courses = new ArrayList<>();
 
         // Récupération des cours pour la classe de l'étudiant
-        List<Course> tmp = courseRepository.findByStudentGroupsContaining(studentClasse);
+        List<Course> tmp = courseRepository.findByStudentGroupContaining(studentClasse);
         if (tmp != null) {
             courses.addAll(tmp);
         }
 
         // Récupération des cours pour la promo de l'étudiant
-        tmp = courseRepository.findByStudentGroupsContaining(studentPromo);
+        tmp = courseRepository.findByStudentGroupContaining(studentPromo);
         if (tmp != null) {
             courses.addAll(tmp);
         }
 
         // Récupération des cours pour le pathway de l'étudiant
-        tmp = courseRepository.findByStudentGroupsContaining(studentPathway);
+        tmp = courseRepository.findByStudentGroupContaining(studentPathway);
         if (tmp != null) {
             courses.addAll(tmp);
         }
@@ -53,5 +53,9 @@ public class CourseService {
         }
 
         return uniqueCourses;
+    }
+
+    public List<Course> getCoursesOfProfessor(Professor professor) {
+        return courseRepository.findByProfessor(professor);
     }
 }

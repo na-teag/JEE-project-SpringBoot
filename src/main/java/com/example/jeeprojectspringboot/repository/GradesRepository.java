@@ -11,4 +11,6 @@ import java.util.List;
 public interface GradesRepository extends JpaRepository<Grade, Long> {
 
     List<Grade> findByStudent(Student student);
+
+    void deleteByStudent(Student student);
 }
