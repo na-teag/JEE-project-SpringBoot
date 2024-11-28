@@ -2,7 +2,6 @@
 <%@ include file="fragments/header.jsp" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/indexAdmin.css">
 
-
 <div class="main-content">
 	<c:choose>
 	<c:when test="${not empty roles and role == roles.admin}">

@@ -12,12 +12,13 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    // Trouver les cours par la classe d'un étudiant
     List<Course> findByStudentGroupsContaining(Classe classe);
 
-    // Trouver les cours par la promo d'un étudiant
     List<Course> findByStudentGroupsContaining(Promo promo);
 
-    // Trouver les cours par le pathway d'un étudiant
     List<Course> findByStudentGroupsContaining(Pathway pathway);
+
+    Course save(Course course);
+
+    void deleteById(long id);
 }
