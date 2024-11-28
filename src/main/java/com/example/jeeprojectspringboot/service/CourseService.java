@@ -2,10 +2,19 @@ package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.CourseRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -13,7 +22,6 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    // Méthode pour récupérer les cours d'un étudiant
     public List<Course> getCoursesOfStudent(Student student) {
         Classe studentClasse = student.getClasse();
         Promo studentPromo = studentClasse.getPromo();
@@ -58,5 +66,25 @@ public class CourseService {
 
     public Course getSelectedCourse(long id){
         return courseRepository.findById(id);
+    }
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    public Optional<Course> getCourseById(Long id) {
+        return courseRepository.findById(id);
+    }
+
+    public Course saveCourse(Course course) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Course>> errors = validator.validate(course);
+        if (!errors.isEmpty()) {
+            throw new ConstraintViolationException(errors);
+        }
+        return courseRepository.save(course);
+    }
+
+    public void deleteCourse(Long id) {
+        courseRepository.deleteById(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class ProfessorService {
@@ -78,4 +79,16 @@ public class ProfessorService {
 		}
 		professorRepository.deleteById(id);
 	}
+}
+    @Autowired
+    private ProfessorRepository professorRepository;
+
+    public Optional<Professor> getProfessorById(Long id) {
+        return professorRepository.findById(id);
+    }
+
+    public List<Professor> getAllProfessors() {
+        return professorRepository.findAll();
+    }
+
 }
