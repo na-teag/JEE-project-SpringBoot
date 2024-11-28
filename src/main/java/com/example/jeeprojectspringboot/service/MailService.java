@@ -2,6 +2,7 @@ package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -15,7 +16,7 @@ public class MailService {
 	private final StudentService studentService;
 
 	@Autowired
-	public MailService(StudentService studentService) {
+	public MailService(@Lazy StudentService studentService) {
 		this.studentService = studentService;
 	}
 
@@ -69,7 +70,7 @@ public class MailService {
 	}
 
 	private void sendEmailToGroup(String senderEmail, StudentGroup studentGroup, String object, String body) {
-		// TODO ajouter le findClasseByStudentGroup() quand ClasseService
+		// TODO ajouter le findClasseByStudentGroup() quand ClasseService sera fait
 		List<Classe> classeList = new ArrayList<>();//classeManager.getClassesByStudentGroup(studentGroup);
 		List<Student> studentList = new ArrayList<>();
 		for (Classe classe : classeList) {

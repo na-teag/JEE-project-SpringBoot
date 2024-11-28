@@ -19,6 +19,8 @@ public class GradesService {
         return gradesRepository.findByStudent(student);
     }
 
+    // TODO ajouter la gestion des mails quand on assigne une nouvelle note
+
     @Transactional
     public void deleteGradesForStudent(Student student) {
         gradesRepository.deleteByStudent(student);

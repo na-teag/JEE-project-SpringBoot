@@ -5,7 +5,15 @@
     <h2>
         <c:choose>
             <c:when test="${not empty role}">
-                Vous n'êtes pas autorisé à accéder à cette page.
+                <c:choose>
+                    <c:when test="${empty errorMessage}">
+                        Vous n'êtes pas autorisé à accéder à cette page.
+                    </c:when>
+                    <c:otherwise>
+                        ${errorMessage}
+                    </c:otherwise>
+                </c:choose>
+
             </c:when>
             <c:otherwise>
                 Veuillez vous connecter.
