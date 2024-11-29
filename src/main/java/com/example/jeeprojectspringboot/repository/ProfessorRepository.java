@@ -13,5 +13,6 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 	List<Professor> findAll();
 
 	Professor save(Professor professor);
+
     List<Professor> findAll();
 }

@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
+
 
 @Service
 public class ProfessorService {
@@ -80,6 +81,7 @@ public class ProfessorService {
 		professorRepository.deleteById(id);
 	}
 }
+
     @Autowired
     private ProfessorRepository professorRepository;
 
@@ -87,8 +89,5 @@ public class ProfessorService {
         return professorRepository.findById(id);
     }
 
-    public List<Professor> getAllProfessors() {
-        return professorRepository.findAll();
-    }
 
 }

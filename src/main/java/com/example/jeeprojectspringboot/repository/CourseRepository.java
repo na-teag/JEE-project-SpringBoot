@@ -21,6 +21,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByStudentGroupsContaining(Pathway pathway);
 
     List<Course> findByProfessor(Professor professor);
+
     Course save(Course course);
 
     void deleteById(long id);

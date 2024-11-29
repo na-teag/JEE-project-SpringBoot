@@ -52,6 +52,7 @@ public class SubjectService {
 	public void deleteSubject(Long id) {
 		subjectRepository.deleteById(id);
 	}
+
     @Autowired
     private SubjectRepository subjectRepository;
 

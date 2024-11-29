@@ -79,6 +79,7 @@ public class CourseService {
     public Course getSelectedCourse(long id){
         return courseRepository.findById(id);
     }
+
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
