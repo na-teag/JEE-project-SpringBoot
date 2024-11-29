@@ -80,10 +80,11 @@ public class UserController {
 						// if there is no id, then it is a new object
 						LocalDate birthday = personService.getBirthday(birthdayStr);
 						student.setBirthday(birthday);
-						studentService.saveStudent(student, true);
+						studentService.saveStudent(student, true, null);
 					} else {
 						// if there is an id the object already exists
-						studentService.saveStudent(student, false);
+						Classe formerClasse = studentService.findStudentById(id).getClasse();
+						studentService.saveStudent(student, false, formerClasse.getId());
 					}
 					return "users";
 				} else if ("saveProf".equals(action)) {

@@ -50,11 +50,15 @@ public class StudentService {
 	}
 
 	@Transactional
-	public Student saveStudent(Student student, boolean isNew) {
+	public Student saveStudent(Student student, boolean isNew, Long formerClasseId) {
 		if (isNew) {
 			personService.setPersonNumber(student);
 			String password = String.format("%02d%02d%d", student.getBirthday().getDayOfMonth(), student.getBirthday().getMonthValue(), student.getBirthday().getYear());
 			student.setPassword(password);
+		}
+
+		if (!isNew && formerClasseId == null) {
+			throw new IllegalArgumentException("Student cannot already exists and have no former classe");
 		}
 
 		// set the username based on the name
@@ -78,9 +82,10 @@ public class StudentService {
 			throw new ConstraintViolationException(violations);
 		}
 
-		Student formerStudent = findStudentById(student.getId());
-		if (formerStudent == null || !formerStudent.getClasse().getId().equals(student.getClasse().getId())) { // TODO rajouter le nom de la classe quand le ClasseService sera terminé -> -> -> -> -> -> -> -> -> -> -> -> -> ->  <-
-			mailService.sendEmail("do.not.reply@cytech.fr", student, "Changement dans vos inscription", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + /* classeManager.getClasseById(classeId).getName() + */ ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
+		if (!isNew) {
+			if (formerClasseId.equals(student.getClasse().getId())) { // TODO rajouter le nom de la classe quand le ClasseService sera terminé -> -> -> -> -> -> -> -> -> -> -> -> -> ->  <-
+				mailService.sendEmail("do.not.reply@cytech.fr", student, "Changement dans vos inscription", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + /* classeManager.getClasseById(classeId).getName() + */ ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
+			}
 		}
 
 		return studentRepository.save(student);

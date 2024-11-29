@@ -1,6 +1,5 @@
 package com.example.jeeprojectspringboot;
 
-import com.example.jeeprojectspringboot.schoolmanager.Address;
 import com.example.jeeprojectspringboot.service.AddressService;
 import com.example.jeeprojectspringboot.service.DataCleanupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class Main extends SpringBootServletInitializer implements CommandLineRunner {
 
-	@Autowired
-	private AddressService addressService; // Injection du service
 
 	@Autowired
 	private DataCleanupService dataCleanupService;
@@ -30,23 +27,15 @@ public class Main extends SpringBootServletInitializer implements CommandLineRun
 
 	@Override
 	public void run(String... args) throws Exception {
-		//resetDatabase();
+		if (args.length > 0 && "reset".equalsIgnoreCase(args[0])) {
+			resetDatabase();
+		}
 	}
 
 	public void resetDatabase(){
-		// Supprimer toutes les instances
-		dataCleanupService.deleteAllEntities();
-
-		// Créer une nouvelle adresse à ajouter
-		Address address = new Address();
-		address.setNumber("123");
-		address.setStreet("Rue des Lilas");
-		address.setCity("Paris");
-		address.setPostalCode(75000);
-		address.setCountry("France");
-
-		// Sauvegarder l'adresse dans la base de données via le service
-		Address savedAddress = addressService.addAddress(address);
+		dataCleanupService.deleteAllEntities(); // Supprimer toutes les instances
+		dataCleanupService.fillDatabase(); // créer celles par défaut
+		// pour un reset lancez : mvn spring-boot:run -Dspring-boot.run.arguments=reset
 	}
 
 }
