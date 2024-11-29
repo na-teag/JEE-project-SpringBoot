@@ -11,5 +11,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
 
     StudentGroup findById(long id);
 
+    void deleteById(Long id);
+
     
 }

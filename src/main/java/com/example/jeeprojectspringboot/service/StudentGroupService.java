@@ -16,4 +16,7 @@ public class StudentGroupService {
     public StudentGroup getStudentGroupFromId(long id) {
         return studentGroupRepository.findById(id);
     }
+
+    public void deleteById(Long id){studentGroupRepository.deleteById(id);}
+
 }
