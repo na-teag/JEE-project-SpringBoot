@@ -20,7 +20,7 @@ public class ClassCategoryController {
     private HttpServletRequest request;
 
     @GetMapping("/classCategories")
-    public String login(HttpSession session, Model model) {
+    public String getClassCategories(HttpSession session, Model model) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{
                 model.addAttribute("classCategories", classCategoryService.getAllClassCategories());
@@ -34,7 +34,7 @@ public class ClassCategoryController {
     }
 
     @GetMapping("/classCategory")
-    public String logout(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam("color") String color, @RequestParam(value = "id", required = false) Long id) {
+    public String editClassCategory(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam("color") String color, @RequestParam(value = "id", required = false) Long id) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{
                 if ("save".equals(action)) {
