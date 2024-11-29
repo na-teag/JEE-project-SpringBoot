@@ -37,6 +37,8 @@ public class CourseOccurrenceService {
 		return courseOccurrenceRepository.findById(id);
 	}
 
+	public CourseOccurrence saveCourseOccurrence(CourseOccurrence courseOccurrence) { return courseOccurrenceRepository.save(courseOccurrence); }
+
 	public void deleteCourseOccurrence(Long id){
 		courseOccurrenceRepository.deleteById(id);
 	}
