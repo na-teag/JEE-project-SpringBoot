@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 	Professor findById(long id);
 
-	List<Professor> findAll();
-
 	Professor save(Professor professor);
+
+    List<Professor> findAll();
 }

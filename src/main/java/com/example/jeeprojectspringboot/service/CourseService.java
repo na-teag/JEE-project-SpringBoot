@@ -1,11 +1,23 @@
 package com.example.jeeprojectspringboot.service;
 
+import com.example.jeeprojectspringboot.repository.CourseOccurenceRepository;
 import com.example.jeeprojectspringboot.repository.CourseRepository;
+import com.example.jeeprojectspringboot.repository.GradesRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -13,7 +25,15 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    // Méthode pour récupérer les cours d'un étudiant
+    @Autowired
+    private GradesService gradesService;
+
+    @Autowired
+    private CourseOccurenceService courseOccurenceService;
+
+    @Autowired
+    private StudentGroupeService studentGroupeService;
+
     public List<Course> getCoursesOfStudent(Student student) {
         Classe studentClasse = student.getClasse();
         Promo studentPromo = studentClasse.getPromo();
@@ -58,5 +78,42 @@ public class CourseService {
 
     public Course getSelectedCourse(long id){
         return courseRepository.findById(id);
+    }
+
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    public Optional<Course> getCourseById(Long id) {
+        return courseRepository.findById(id);
+    }
+
+
+    public Course saveCourse(Course course) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Course>> errors = validator.validate(course);
+        if (!errors.isEmpty()) {
+            throw new ConstraintViolationException(errors);
+        }
+        return courseRepository.save(course);
+    }
+
+    public void deleteCourse(Long id) {
+        courseRepository.getReferenceById(id).setStudentGroups(new ArrayList<StudentGroup>());
+        Optional<Course> courseOpt = courseRepository.findById(id);
+        if (courseOpt.isPresent()) {
+            Course course = courseOpt.get();
+            List<Grade> grades = gradesService.findByCourse(course);
+            for (Grade grade : grades) {
+                gradesService.deleteById(grade.getId());
+            }
+            List<CourseOccurence> courseOccurences = courseOccurenceService.findByCourse(course);
+            for (CourseOccurence courseOccurence : courseOccurences){
+                courseOccurenceService.deleteCourseOccurence(courseOccurence.getId());
+            }
+            courseRepository.delete(course);
+        } else {
+            throw new EntityNotFoundException("Course with ID " + id + " not found");
+        }
     }
 }

@@ -6,13 +6,18 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectService {
@@ -46,4 +51,10 @@ public class SubjectService {
 	public void deleteSubject(Long id) {
 		subjectRepository.deleteById(id);
 	}
+
+    public Optional<Subject> getSubjectById(Long id) {
+        return subjectRepository.findById(id);
+    }
+
+
 }
