@@ -1,8 +1,6 @@
 package com.example.jeeprojectspringboot.service;
 
-import com.example.jeeprojectspringboot.repository.CourseOccurenceRepository;
 import com.example.jeeprojectspringboot.repository.CourseRepository;
-import com.example.jeeprojectspringboot.repository.GradesRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -10,9 +8,9 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +27,8 @@ public class CourseService {
     private GradesService gradesService;
 
     @Autowired
-    private CourseOccurenceService courseOccurenceService;
+    @Lazy
+    private CourseOccurrenceService courseOccurrenceService;
 
 
     public List<Course> getCoursesOfStudent(Student student) {
@@ -97,7 +96,7 @@ public class CourseService {
     }
 
     public void deleteCourse(Long id) {
-        courseRepository.getReferenceById(id).setStudentGroups(new ArrayList<StudentGroup>());
+        courseRepository.getReferenceById(id).setStudentGroups(new ArrayList<>());
         Optional<Course> courseOpt = courseRepository.findById(id);
         if (courseOpt.isPresent()) {
             Course course = courseOpt.get();
@@ -105,9 +104,9 @@ public class CourseService {
             for (Grade grade : grades) {
                 gradesService.deleteById(grade.getId());
             }
-            List<CourseOccurence> courseOccurences = courseOccurenceService.findByCourse(course);
-            for (CourseOccurence courseOccurence : courseOccurences){
-                courseOccurenceService.deleteCourseOccurence(courseOccurence.getId());
+            List<CourseOccurrence> courseOccurrences = courseOccurrenceService.findByCourse(course);
+            for (CourseOccurrence courseOccurrence : courseOccurrences){
+                courseOccurrenceService.deleteCourseOccurrence(courseOccurrence.getId());
             }
             courseRepository.delete(course);
         } else {

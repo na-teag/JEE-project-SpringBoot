@@ -75,7 +75,7 @@ public class UserController {
 					student.setLastName(lastName);
 					student.setEmail(email);
 					student.setAddress(address);
-					// student.setClasse(classeService.getClasseById(classeId); TODO
+					// student.setClasse(classeService.getClasseById(classeId); TODO add when classService is created
 					if (id == null) {
 						// if there is no id, then it is a new object
 						LocalDate birthday = personService.getBirthday(birthdayStr);

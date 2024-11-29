@@ -22,7 +22,7 @@
       <c:forEach var="professor" items="${profUsers}">
         <div class="featured-sections" onclick="openPopupProf(this, false, '${professor.id}', '${professor.email}', '${professor.lastName}', '${professor.firstName}', '${professor.address.number}', '${professor.address.street}', '${professor.address.city}', '${professor.address.postalCode}', '${professor.address.country}', [<c:forEach var="subject" varStatus="status" items="${professor.teachingSubjects}">'${subject.id}'<c:if test="${!status.last}">,</c:if></c:forEach>])">
           <h4>nom : ${professor.firstName} ${professor.lastName}</h4>
-          <p>numéro étudiant : ${professor.personNumber}</p>
+          <p>numéro professeur : ${professor.personNumber}</p>
           <p>email : ${professor.email}</p>
           <p>adresse : ${professor.address.number} ${professor.address.street}, ${professor.address.postalCode} ${professor.address.city}, ${professor.address.country}</p>
           <p>sujets de cours possibles :
@@ -37,7 +37,7 @@
       <c:forEach var="admin" items="${adminUsers}">
         <div class="featured-sections" onclick="openPopupAdmin(this, false, '${admin.id}', '${admin.email}', '${admin.lastName}', '${admin.firstName}', '${admin.address.number}', '${admin.address.street}', '${admin.address.city}', '${admin.address.postalCode}', '${admin.address.country}')">
           <h4>nom : ${admin.firstName} ${admin.lastName}</h4>
-          <p>numéro étudiant : ${admin.personNumber}</p>
+          <p>numéro administrateur : ${admin.personNumber}</p>
           <p>email : ${admin.email}</p>
           <p>adresse : ${admin.address.number} ${admin.address.street}, ${admin.address.postalCode} ${admin.address.city}, ${admin.address.country}</p>
         </div>
@@ -97,3 +97,4 @@
 </div>
 
 <%@ include file="fragments/footer.jsp" %>
+0
