@@ -31,8 +31,6 @@ public class CourseService {
     @Autowired
     private CourseOccurenceService courseOccurenceService;
 
-    @Autowired
-    private StudentGroupeService studentGroupeService;
 
     public List<Course> getCoursesOfStudent(Student student) {
         Classe studentClasse = student.getClasse();
