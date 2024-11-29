@@ -4,6 +4,18 @@
 
 <div class="main-content">
     <h1>Saisie des notes</h1>
+    <c:if test="${not empty message}">
+        <div class="alert alert-success">
+                ${message}
+        </div>
+        <c:remove var="message"/>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="alert alert-error">
+                ${error}
+        </div>
+        <c:remove var="error"/>
+    </c:if>
     <form action="${pageContext.request.contextPath}/gradesManagement" method="get">
         <label for="courses">Choisir le cours :</label>
         <select id="courses" name="courses" onchange="this.form.submit()">
@@ -85,19 +97,6 @@
                     ${not empty selectedStudentGrade ? 'Modifier la note' : 'Enregistrer la note'}
             </button>
         </form>
-    </c:if>
-
-    <c:if test="${not empty message}">
-        <div class="alert alert-success">
-                ${message}
-        </div>
-        <c:remove var="message"/>
-    </c:if>
-    <c:if test="${not empty error}">
-        <div class="alert alert-error">
-                ${error}
-        </div>
-        <c:remove var="error"/>
     </c:if>
 </div>
 
