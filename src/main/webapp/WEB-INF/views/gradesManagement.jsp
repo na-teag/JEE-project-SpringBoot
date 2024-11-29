@@ -63,13 +63,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="context">Contexte :</label>
+                    <label for="context">Contexte(facultatif) :</label>
                     <input type="text" id="context" name="context"
                            value="${not empty selectedStudentGrade ? selectedStudentGrade.context : ''}"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="comment">Commentaire :</label>
+                    <label for="comment">Commentaire(facultatif) :</label>
                     <input type="text" id="comment" name="comment"
                            value="${not empty selectedStudentGrade ? selectedStudentGrade.comment : ''}"/>
                 </div>

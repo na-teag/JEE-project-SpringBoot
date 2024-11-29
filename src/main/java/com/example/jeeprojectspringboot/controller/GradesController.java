@@ -133,6 +133,12 @@ public class GradesController {
                 return handleStudentSelection(session, studentsParam, model);
             } else {
                 // Si aucun cours ni classe n'est sélectionné, afficher la liste des cours
+                session.setAttribute("coursesId",null);
+                session.setAttribute("classesId", null);
+                session.setAttribute("classesList", null);
+                session.setAttribute("studentsList", null);
+                session.setAttribute("selectedStudentGrade", null);
+                session.setAttribute("selectedStudentId", null);
                 List<Course> coursesList = courseService.getCoursesOfProfessor(professor);
                 session.setAttribute("coursesList", coursesList);
                 model.addAttribute("coursesList", coursesList);
