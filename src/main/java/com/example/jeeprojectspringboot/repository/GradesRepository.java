@@ -16,4 +16,7 @@ public interface GradesRepository extends JpaRepository<Grade, Long> {
 
     void deleteByStudent(Student student);
     Grade findByStudentAndCourse(Student student, Course course);
+    List<Grade> findByCourse(Course course);
+
+    void deleteById(long id);
 }

@@ -101,5 +101,12 @@ public class GradesService {
         } catch (Exception e) {
             return "Erreur lors de la modification de la note : " + e.getMessage();
         }
+    public void deleteById(Long id){gradesRepository.deleteById(id);}
+
+    public List<Grade> findByCourse(Course course) {
+        if (course == null || course.getId() == null) {
+            throw new IllegalArgumentException("Course must not be null and must have a valid ID.");
+        }
+        return gradesRepository.findByCourse(course);
     }
 }

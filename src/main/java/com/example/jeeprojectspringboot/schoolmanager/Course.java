@@ -12,13 +12,17 @@ import java.util.List;
 @Table(name = "course")
 public class Course extends Model {
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	@JoinTable(
 			name = "course_student_group",
 			joinColumns = @JoinColumn(name = "course_id"),
 			inverseJoinColumns = @JoinColumn(name = "student_group_id")
 	)
 	private List<StudentGroup> studentGroups;
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+	private List<Grade> grades;
+
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // Pas de suppression du sujet
 	@JoinColumn(name = "subject_id", nullable = false)
