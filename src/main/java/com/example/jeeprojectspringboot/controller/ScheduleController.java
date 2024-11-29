@@ -21,24 +21,14 @@ import java.util.Map;
 public class ScheduleController {
 
 	@Autowired
-	private PersonService personService;
-	@Autowired
-	private StudentService studentService;
-	@Autowired
-	private ProfessorService professorService;
-	@Autowired
-	private AdminService adminService;
-	@Autowired
-	private ClasseService classeService;
-	@Autowired
-	private SubjectService subjectService;
+	private CourseOccurrenceService courseOccurrenceService;
 
 	@Autowired
 	private HttpServletRequest request;
 
 
-	@GetMapping("/users")
-	public String getUsers(Model model, HttpSession session, @RequestParam(value = "id", required = false) String id, @RequestParam("year") String yearParam, @RequestParam("month") String monthParam, @RequestParam("day") String dayParam) {
+	@GetMapping("/schedule")
+	public String getSchedule(Model model, HttpSession session, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "year", required = false) String yearParam, @RequestParam(value = "month", required = false) String monthParam, @RequestParam(value = "day", required = false) String dayParam) {
 
 		String role = (String) session.getAttribute("role");
 		// check the user authenticated
@@ -95,12 +85,12 @@ public class ScheduleController {
 		}
 
 
-		ScheduleManager scheduleManager = ScheduleManager.getInstance();
+
 		List<LocalDate> dates = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			dates.add(monday.plusDays(i));
 		}
-		Map<String, List<Map<String, String>>> schedule = scheduleManager.getCoursesByPersonNumberAndDays(id, dates);
+		Map<String, List<Map<String, String>>> schedule = courseOccurrenceService.getCoursesByPersonNumberAndDays(id, dates);
 		Map<String, Integer> days = new LinkedHashMap<>();
 		days.put(DayOfWeek.MONDAY.toString(), monday.getDayOfMonth());
 		days.put(DayOfWeek.TUESDAY.toString(), monday.plusDays(1).getDayOfMonth());

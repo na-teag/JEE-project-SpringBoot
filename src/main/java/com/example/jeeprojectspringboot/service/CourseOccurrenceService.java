@@ -29,22 +29,37 @@ public class CourseOccurrenceService {
 	/*
 	 * TODO when CourseOccurrenceService is created :
 	 *
-	 * add a deleteByProfessor() method that delete every CourseOccurence of a given professor
+	 * add a deleteByProfessor() method that delete every CourseOccurrence of a given professor
 	 * use it the TODO in ProfessorService line 77
 	 */
 
-	private static Map<String, String> getCourseDetails(CourseOccurence courseOccurence) {
+	public CourseOccurrence getCourseOccurrenceById(long id){
+		return courseOccurrenceRepository.findById(id);
+	}
+
+	public void deleteCourseOccurrence(Long id){
+		courseOccurrenceRepository.deleteById(id);
+	}
+
+	public List<CourseOccurrence> findByCourse(Course course) {
+		if (course == null || course.getId() == null) {
+			throw new IllegalArgumentException("Course must not be null and must have a valid ID.");
+		}
+		return courseOccurrenceRepository.findByCourse(course);
+	}
+
+	private static Map<String, String> getCourseDetails(CourseOccurrence courseOccurrence) {
 		Map<String, String> courseDetails = new HashMap<>();
-		courseDetails.put("title", courseOccurence.getCourse().getSubject().getName());
-		courseDetails.put("startTime", String.format("%02d", courseOccurence.getBeginning().getHour()) + "h" + String.format("%02d", courseOccurence.getBeginning().getMinute()));
-		courseDetails.put("endTime", String.format("%02d", courseOccurence.getEnd().getHour()) + "h" + String.format("%02d", courseOccurence.getEnd().getMinute()));
-		courseDetails.put("room", courseOccurence.getClassroom());
-		courseDetails.put("professor", courseOccurence.getProfessor().getFirstName() + " " + courseOccurence.getProfessor().getLastName());
-		courseDetails.put("type", courseOccurence.getCategory().getName());
-		courseDetails.put("color", courseOccurence.getCategory().getColor());
+		courseDetails.put("title", courseOccurrence.getCourse().getSubject().getName());
+		courseDetails.put("startTime", String.format("%02d", courseOccurrence.getBeginning().getHour()) + "h" + String.format("%02d", courseOccurrence.getBeginning().getMinute()));
+		courseDetails.put("endTime", String.format("%02d", courseOccurrence.getEnd().getHour()) + "h" + String.format("%02d", courseOccurrence.getEnd().getMinute()));
+		courseDetails.put("room", courseOccurrence.getClassroom());
+		courseDetails.put("professor", courseOccurrence.getProfessor().getFirstName() + " " + courseOccurrence.getProfessor().getLastName());
+		courseDetails.put("type", courseOccurrence.getCategory().getName());
+		courseDetails.put("color", courseOccurrence.getCategory().getColor());
 
 		String studentGroupsNames = "";
-		for (StudentGroup studentGroup : courseOccurence.getCourse().getStudentGroups()) {
+		for (StudentGroup studentGroup : courseOccurrence.getCourse().getStudentGroups()) {
 			if (!studentGroupsNames.isEmpty()){
 				studentGroupsNames += ", ";
 			}
@@ -56,10 +71,10 @@ public class CourseOccurrenceService {
 
 	private Map<String, List<Map<String, String>>> getScheduleForCoursesAndDays(List<LocalDate> days, Map<String, List<Map<String, String>>> schedule, List<Course> courses) {
 		for (LocalDate day: days) {
-			List<CourseOccurence> coursesOfDayInput = courseOccurrenceRepository.findCourseOccurrencesForCoursesAndDate(courses, day);
+			List<CourseOccurrence> coursesOfDayInput = courseOccurrenceRepository.findCourseOccurrencesForCoursesAndDate(courses, day);
 			List<Map<String, String>> coursesOfDayOutput = new ArrayList<>();
-			for (CourseOccurence courseOccurence : coursesOfDayInput) {
-				Map<String, String> courseDetails = getCourseDetails(courseOccurence);
+			for (CourseOccurrence courseOccurrence : coursesOfDayInput) {
+				Map<String, String> courseDetails = getCourseDetails(courseOccurrence);
 				coursesOfDayOutput.add(courseDetails);
 			}
 			schedule.put(day.getDayOfWeek().toString(), coursesOfDayOutput);
@@ -81,7 +96,7 @@ public class CourseOccurrenceService {
 		} else {
 			// student case
 			Student student = (Student) user;
-			List<Course> courses = courseService.findB(student);
+			List<Course> courses = courseService.getCoursesOfStudent(student);
 			schedule = getScheduleForCoursesAndDays(days, schedule, courses);
 		}
 		return schedule;

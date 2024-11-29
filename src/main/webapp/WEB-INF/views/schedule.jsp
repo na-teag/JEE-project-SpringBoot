@@ -12,7 +12,7 @@
 			<input type="date" id="date-picker" /><br>
 			<label for="id-picker">Entrez un numéro (facultatif) :</label>
 			<input type="text" id="id-picker" /><br>
-			<input type="submit" onclick="handleDateChange()">
+			<input type="submit" onclick="handleDateChange()" value="valider">
 			<div class="calendar">
 				<div class="timeline">
 					<div class="spacer"></div>

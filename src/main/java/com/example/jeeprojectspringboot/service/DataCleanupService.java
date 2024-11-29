@@ -22,7 +22,7 @@ public class DataCleanupService {
 		entityManager.createQuery("DELETE FROM ClassCategory").executeUpdate();
 		entityManager.createQuery("DELETE FROM Classe").executeUpdate();
 		entityManager.createQuery("DELETE FROM Course").executeUpdate();
-		entityManager.createQuery("DELETE FROM CourseOccurence").executeUpdate();
+		entityManager.createQuery("DELETE FROM CourseOccurrence").executeUpdate();
 		entityManager.createQuery("DELETE FROM Grade").executeUpdate();
 		entityManager.createQuery("DELETE FROM Pathway").executeUpdate();
 		entityManager.createQuery("DELETE FROM Professor").executeUpdate();
