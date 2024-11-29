@@ -99,13 +99,10 @@ public class CourseService {
     }
 
     public void deleteCourse(Long id) {
+        courseRepository.getReferenceById(id).setStudentGroups(new ArrayList<StudentGroup>());
         Optional<Course> courseOpt = courseRepository.findById(id);
         if (courseOpt.isPresent()) {
             Course course = courseOpt.get();
-            List<StudentGroup> studentGroups = course.getStudentGroups();
-            for (StudentGroup studentGroup : studentGroups){
-                studentGroupeService.deleteById(studentGroup.getId());
-            }
             List<Grade> grades = gradesService.findByCourse(course);
             for (Grade grade : grades) {
                 gradesService.deleteById(grade.getId());

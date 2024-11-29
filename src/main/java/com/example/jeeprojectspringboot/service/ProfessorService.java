@@ -80,10 +80,6 @@ public class ProfessorService {
 		}
 		professorRepository.deleteById(id);
 	}
-}
-
-    @Autowired
-    private ProfessorRepository professorRepository;
 
     public Optional<Professor> getProfessorById(Long id) {
         return professorRepository.findById(id);

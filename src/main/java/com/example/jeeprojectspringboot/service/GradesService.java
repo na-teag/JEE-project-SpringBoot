@@ -8,7 +8,6 @@ import jakarta.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Set;
@@ -101,6 +100,7 @@ public class GradesService {
         } catch (Exception e) {
             return "Erreur lors de la modification de la note : " + e.getMessage();
         }
+    }
     public void deleteById(Long id){gradesRepository.deleteById(id);}
 
     public List<Grade> findByCourse(Course course) {

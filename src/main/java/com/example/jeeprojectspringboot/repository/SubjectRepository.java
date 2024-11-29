@@ -16,7 +16,4 @@ public interface SubjectRepository  extends JpaRepository<Subject, Long> {
     Subject save(Subject subject);
 
     void deleteById(long id);
-
-public interface SubjectRepository extends JpaRepository<Subject,Long> {
-    List<Subject> findAll();
 }

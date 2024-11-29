@@ -47,13 +47,14 @@ public class CourseController {
 
 
     @GetMapping("/course")
-    public String saveCourse(@RequestParam("subject") Long subjectId,
-                             @RequestParam("professor") Long professorId,
+    public String saveCourse(@RequestParam("subjectId") Long subjectId,
+                             @RequestParam("professorId") Long professorId,
                              @RequestParam("classroom") String classroom,
-                             @RequestParam(required = false) Long id,
-                             @RequestParam("action") String action) {
+                             @RequestParam(required = false, value = "id") Long id,
+                             @RequestParam("action") String action,
+                             HttpSession session) {
 
-        //if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
+        if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
 
             if ("save".equals(action)) {
                 Optional<Subject> subjectOpt = subjectService.getSubjectById(subjectId);
@@ -74,16 +75,16 @@ public class CourseController {
                 course.setClassroom(classroom);
 
                 courseService.saveCourse(course);
-                return "course";
+                return "redirect:/courses";
 
             } else if ("delete".equals(action)) {
                 courseService.deleteCourse(id);
-                return "course";
+                return "redirect:/courses";
             }
             return "redirect:/courses";
 
-        }/* else {
+        } else {
             return "error";
         }
-    }*/
+    }
 }
