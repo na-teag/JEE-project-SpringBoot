@@ -1,19 +1,21 @@
 package com.example.jeeprojectspringboot.repository;
 
 import com.example.jeeprojectspringboot.schoolmanager.Course;
-import com.example.jeeprojectspringboot.schoolmanager.Grade;
-import com.example.jeeprojectspringboot.schoolmanager.Student;
+import com.example.jeeprojectspringboot.schoolmanager.CourseOccurence;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface GradesRepository extends JpaRepository<Grade, Long> {
+public interface CourseOccurenceRepository extends JpaRepository<CourseOccurence,Long>{
+    List<CourseOccurence> findAll();
 
-    List<Grade> findByStudent(Student student);
-
-    List<Grade> findByCourse(Course course);
+    CourseOccurence findById(long id);
 
     void deleteById(long id);
+
+    List<CourseOccurence> findByCourse(Course course);
+
+
 }

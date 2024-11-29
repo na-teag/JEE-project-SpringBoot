@@ -3,7 +3,10 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/globalManagement.css">
 
 <div class="main-content">
-    <c:forEach var="course" items="${sessionScope.courses}">
+    <c:if test="${not empty errorMessage}">
+        <p style="color: red;">${errorMessage}</p>
+    </c:if>
+    <c:forEach var="course" items="${courses}">
         <div class="featured-sections" onclick="openPopup(this, false, '${course.id}', '${course.subject.id}', '${course.professor.id}', '${course.classroom}')">
             <h4>Matière : ${course.subject.name}</h4>
             <p>Professeur : ${course.professor.firstName} ${course.professor.lastName}</p>

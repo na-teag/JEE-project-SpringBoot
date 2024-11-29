@@ -1,7 +1,10 @@
 package com.example.jeeprojectspringboot.service;
 
+import com.example.jeeprojectspringboot.repository.CourseOccurenceRepository;
 import com.example.jeeprojectspringboot.repository.CourseRepository;
+import com.example.jeeprojectspringboot.repository.GradesRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -20,6 +23,15 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private GradesService gradesService;
+
+    @Autowired
+    private CourseOccurenceService courseOccurenceService;
+
+    @Autowired
+    private StudentGroupeService studentGroupeService;
 
     public List<Course> getCoursesOfStudent(Student student) {
         Classe studentClasse = student.getClasse();
@@ -67,6 +79,7 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
+
     public Course saveCourse(Course course) {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Course>> errors = validator.validate(course);
@@ -77,6 +90,24 @@ public class CourseService {
     }
 
     public void deleteCourse(Long id) {
-        courseRepository.deleteById(id);
+        Optional<Course> courseOpt = courseRepository.findById(id);
+        if (courseOpt.isPresent()) {
+            Course course = courseOpt.get();
+            List<StudentGroup> studentGroups = course.getStudentGroups();
+            for (StudentGroup studentGroup : studentGroups){
+                studentGroupeService.deleteById(studentGroup.getId());
+            }
+            List<Grade> grades = gradesService.findByCourse(course);
+            for (Grade grade : grades) {
+                gradesService.deleteById(grade.getId());
+            }
+            List<CourseOccurence> courseOccurences = courseOccurenceService.findByCourse(course);
+            for (CourseOccurence courseOccurence : courseOccurences){
+                courseOccurenceService.deleteCourseOccurence(courseOccurence.getId());
+            }
+            courseRepository.delete(course);
+        } else {
+            throw new EntityNotFoundException("Course with ID " + id + " not found");
+        }
     }
 }
