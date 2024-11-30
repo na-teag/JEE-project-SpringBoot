@@ -52,7 +52,7 @@ Le projet dispose d'un fichier pour mettre en place et peupler la base de donné
 Pour ce faire, il va falloir compiler le projet et lancer l'application avec l'argument "reset". Cette commande lance également le serveur sur [localhost:8080/JEE-project-SpringBoot/](localhost:8080/JEE-project-SpringBoot/)
 
 ```sh
-mvn spring-boot:run -Dspring-boot.run.arguments=reset"
+mvn spring-boot:run -Dspring-boot.run.arguments=reset
 ```
 
 Par défaut, trois utilisateurs sont déjà présents:
