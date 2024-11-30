@@ -1,9 +1,9 @@
 package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.ProfessorRepository;
+import com.example.jeeprojectspringboot.schoolmanager.Course;
 import com.example.jeeprojectspringboot.schoolmanager.Person;
 import com.example.jeeprojectspringboot.schoolmanager.Professor;
-import com.example.jeeprojectspringboot.schoolmanager.Subject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -51,16 +50,9 @@ public class ProfessorService {
 			professor.setPassword(password);
 		} else {
 			// vérifier qu'on a pas enlevé la permission d'enseigner des cours qu'il enseigne déjà
-			Optional<Professor> originalProfessorOptional = professorRepository.findById(professor.getId());
-			if (originalProfessorOptional.isPresent()) {
-				Professor originalProfessor = originalProfessorOptional.get();
-				List<Subject> missingSubjects = originalProfessor.getTeachingSubjects();
-				missingSubjects.removeAll(professor.getTeachingSubjects());
-				for (Subject subject : missingSubjects) {
-					if (!courseService.getCoursesBySubject(subject).isEmpty()){
-						throw new IllegalStateException("Le professeur " + professor.getFirstName() + " " + professor.getLastName() + " enseigne déjà des cours de " + subject.getName() + ".\nVeuillez supprimer ces cours ou leur assigner un autre professeur");
-					}
-				}
+			List<Course> formerCourses = courseService.getCoursesOfProfessor(professor);
+			if (!formerCourses.isEmpty()) {
+				throw new IllegalStateException("Le professeur " + professor.getFirstName() + " " + professor.getLastName() + " enseigne déjà des cours de la matière " + formerCourses.getFirst().getSubject().getName() + ". Veuillez supprimer ces cours ou leur assigner un autre professeur");
 			}
 		}
 
