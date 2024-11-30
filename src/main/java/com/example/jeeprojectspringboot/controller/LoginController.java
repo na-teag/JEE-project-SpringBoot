@@ -52,12 +52,14 @@ public class LoginController {
 
                 // Rediriger vers la page d'accueil
                 return "redirect:/";
+            } else {
+                model.addAttribute("errorMessage", "Nom d'utilisateur ou mot de passe incorrect.");
+                return "login";
             }
         } catch (IllegalAccessException e) {
             // En cas d'erreur d'authentification, retourner la page de login avec un message d'erreur
             model.addAttribute("errorMessage", "Nom d'utilisateur ou mot de passe incorrect.");
             return "login";
         }
-        return "redirect:login";
     }
 }

@@ -2,7 +2,6 @@ package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import com.example.jeeprojectspringboot.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,20 +29,12 @@ public class UserController {
 	@Autowired
 	private SubjectService subjectService;
 
-	@Autowired
-	private HttpServletRequest request;
-
 
 	@GetMapping("/users")
 	public String getUsers(Model model, HttpSession session) {
 		if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
 			try{
-				model.addAttribute("studentUsers", studentService.getAllStudents());
-				model.addAttribute("adminUsers", adminService.getAllAdmins());
-				model.addAttribute("profUsers", professorService.getAllProfessors());
-				model.addAttribute("classes", classeService.getListOfClasses());
-				model.addAttribute("subjects", subjectService.getAllSubjects());
-				return "users";
+				return setPageAttributes(model);
 			} catch (Exception e){
 				e.printStackTrace();
 				model.addAttribute("errorMessage", e.getMessage());
@@ -53,15 +44,24 @@ public class UserController {
 		return "login";
 	}
 
+	private String setPageAttributes(Model model) {
+		model.addAttribute("studentUsers", studentService.getAllStudents());
+		model.addAttribute("adminUsers", adminService.getAllAdmins());
+		model.addAttribute("profUsers", professorService.getAllProfessors());
+		model.addAttribute("classes", classeService.getListOfClasses());
+		model.addAttribute("subjects", subjectService.getAllSubjects());
+		return "users";
+	}
+
 	@GetMapping("/user")
-	public String editUser(Model model, HttpSession session, @RequestParam("action") String action, @RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName, @RequestParam("email") String email, @RequestParam(value = "id", required = false) Long id, @RequestParam("number") String number, @RequestParam("street") String street, @RequestParam("city") String city, @RequestParam("country") String country, @RequestParam("postalCode") int postalCode, @RequestParam(value = "classeId", required = false) Long classeId, @RequestParam(value= "subjectIdsString", required = false) List<String> subjectIdsString, @RequestParam(value = "birthday", required = false) String birthdayStr) {
+	public String editUser(Model model, HttpSession session, @RequestParam("action") String action, @RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName, @RequestParam("email") String email, @RequestParam(value = "id", required = false) Long id, @RequestParam("number") String number, @RequestParam("street") String street, @RequestParam("city") String city, @RequestParam("country") String country, @RequestParam("postalCode") int postalCode, @RequestParam(value = "classeId", required = false) Long classeId, @RequestParam(value= "subjectId", required = false) List<String> subjectIdsString, @RequestParam(value = "birthday", required = false) String birthdayStr) {
 		if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
 			try {
 				if ("saveStudent".equals(action)) {
 					// if the request is about the creation/modification of a student
 					if (classeId == null) {
 						model.addAttribute("errorMessage", "Paramètres manquants, impossible de traiter la requête");
-						return "users";
+						return setPageAttributes(model);
 					}
 					Address address = new Address();
 					address.setStreet(street);
@@ -70,7 +70,12 @@ public class UserController {
 					address.setPostalCode(postalCode);
 					address.setNumber(number);
 
-					Student student = new Student();
+					Student student;
+					if (id == null) {
+						student = new Student();
+					} else {
+						student = studentService.findStudentById(id);
+					}
 					student.setFirstName(firstName);
 					student.setLastName(lastName);
 					student.setEmail(email);
@@ -92,22 +97,12 @@ public class UserController {
 						studentModify.setClasse(classeService.getClasse(classeId));
 						studentService.saveStudent(studentModify, false, formerClasse.getId());
 					}
-					model.addAttribute("studentUsers", studentService.getAllStudents());
-					model.addAttribute("adminUsers", adminService.getAllAdmins());
-					model.addAttribute("profUsers", professorService.getAllProfessors());
-					model.addAttribute("classes", classeService.getListOfClasses());
-					model.addAttribute("subjects", subjectService.getAllSubjects());
-					return "users";
+					return setPageAttributes(model);
 				} else if ("saveProf".equals(action)) {
 					// if the request is about the creation/modification of a professor
 					if (subjectIdsString == null || subjectIdsString.isEmpty()) {
 						model.addAttribute("errorMessage", "Paramètres manquants, impossible de traiter la requête");
-						model.addAttribute("studentUsers", studentService.getAllStudents());
-						model.addAttribute("adminUsers", adminService.getAllAdmins());
-						model.addAttribute("profUsers", professorService.getAllProfessors());
-						model.addAttribute("classes", classeService.getListOfClasses());
-						model.addAttribute("subjects", subjectService.getAllSubjects());
-						return "users";
+						return setPageAttributes(model);
 					}
 
 					// check that the Subjects exists
@@ -118,12 +113,7 @@ public class UserController {
 							subject = subjectService.getSubject(Long.valueOf(studentId));
 							if (subject == null) {
 								model.addAttribute("errorMessage", "Le sujet n'existe pas");
-								model.addAttribute("studentUsers", studentService.getAllStudents());
-								model.addAttribute("adminUsers", adminService.getAllAdmins());
-								model.addAttribute("profUsers", professorService.getAllProfessors());
-								model.addAttribute("classes", classeService.getListOfClasses());
-								model.addAttribute("subjects", subjectService.getAllSubjects());
-								return "users";
+								return setPageAttributes(model);
 							}
 							subjects.add(subject);
 						}
@@ -135,7 +125,13 @@ public class UserController {
 					address.setPostalCode(postalCode);
 					address.setNumber(number);
 
-					Professor professor = new Professor();
+					Professor professor;
+					if (id == null) {
+						professor = new Professor();
+					} else {
+						professor = professorService.findProfessorById(id);
+					}
+
 					professor.setFirstName(firstName);
 					professor.setLastName(lastName);
 					professor.setEmail(email);
@@ -150,12 +146,7 @@ public class UserController {
 						// if there is an id the object already exists
 						professorService.saveProfessor(professor, false);
 					}
-					model.addAttribute("studentUsers", studentService.getAllStudents());
-					model.addAttribute("adminUsers", adminService.getAllAdmins());
-					model.addAttribute("profUsers", professorService.getAllProfessors());
-					model.addAttribute("classes", classeService.getListOfClasses());
-					model.addAttribute("subjects", subjectService.getAllSubjects());
-					return "users";
+					return setPageAttributes(model);
 				} else if ("saveAdmin".equals(action)) {
 					// if the request is about the creation/modification of an administrator
 
@@ -166,7 +157,12 @@ public class UserController {
 					address.setPostalCode(postalCode);
 					address.setNumber(number);
 
-					Admin admin = new Admin();
+					Admin admin;
+					if (id == null) {
+						admin = new Admin();
+					} else {
+						admin = adminService.findAdminById(id);
+					}
 					admin.setFirstName(firstName);
 					admin.setLastName(lastName);
 					admin.setEmail(email);
@@ -180,50 +176,31 @@ public class UserController {
 						// if there is an id the object already exists
 						adminService.saveAdmin(admin, false);
 					}
-					model.addAttribute("studentUsers", studentService.getAllStudents());
-					model.addAttribute("adminUsers", adminService.getAllAdmins());
-					model.addAttribute("profUsers", professorService.getAllProfessors());
-					model.addAttribute("classes", classeService.getListOfClasses());
-					model.addAttribute("subjects", subjectService.getAllSubjects());
-					return "users";
+					return setPageAttributes(model);
 				} else if ("delete".equals(action) && id != null) {
 					// if the request is about the deletion of a user, no matter the type
-					Person user = personService.getUserById(id);
-					if (user instanceof Student) {
+					Person userToDelete = personService.getUserById(id);
+					if (userToDelete instanceof Student) {
 						studentService.deleteStudentById(id);
-					} else if (user instanceof Professor) {
+					} else if (userToDelete instanceof Professor) {
 						professorService.deleteProfessorById(id);
-					} else if (user instanceof Admin) {
+					} else if (userToDelete instanceof Admin) {
 						adminService.deleteAdminById(id);
 						// si l'admin se supprime lui même, il faut le déconnecter
-						if (user.getId().equals(id)) {
+						Long userId = ((Admin)session.getAttribute("user")).getId();
+						if (userToDelete.getId().equals(userId)) {
 							return "redirect:/logout";
 						}
 					}
-					model.addAttribute("studentUsers", studentService.getAllStudents());
-					model.addAttribute("adminUsers", adminService.getAllAdmins());
-					model.addAttribute("profUsers", professorService.getAllProfessors());
-					model.addAttribute("classes", classeService.getListOfClasses());
-					model.addAttribute("subjects", subjectService.getAllSubjects());
-					return "users";
+					return setPageAttributes(model);
 				} else {
 					model.addAttribute("errorMessage", "Requête non reconnue");
-					model.addAttribute("studentUsers", studentService.getAllStudents());
-					model.addAttribute("adminUsers", adminService.getAllAdmins());
-					model.addAttribute("profUsers", professorService.getAllProfessors());
-					model.addAttribute("classes", classeService.getListOfClasses());
-					model.addAttribute("subjects", subjectService.getAllSubjects());
-					return "users";
+					return setPageAttributes(model);
 				}
 			} catch (Exception e){
 				e.printStackTrace();
 				model.addAttribute("errorMessage", e.getMessage());
-				model.addAttribute("studentUsers", studentService.getAllStudents());
-				model.addAttribute("adminUsers", adminService.getAllAdmins());
-				model.addAttribute("profUsers", professorService.getAllProfessors());
-				model.addAttribute("classes", classeService.getListOfClasses());
-				model.addAttribute("subjects", subjectService.getAllSubjects());
-				return "users";
+				return setPageAttributes(model);
 			}
 		}
 		return "error";
