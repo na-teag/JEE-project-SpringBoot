@@ -2,7 +2,6 @@ package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.PersonRepository;
 import com.example.jeeprojectspringboot.schoolmanager.Person;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +31,10 @@ public class PersonService {
 
     public Person getUserByPersonNumber(String personNumber) {
         return personRepository.findByPersonNumber(personNumber);
+    }
+
+    public Person emailExists(String email) {
+        return personRepository.findByEmail(email);
     }
 
 

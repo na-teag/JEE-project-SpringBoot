@@ -1,6 +1,7 @@
 package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.StudentRepository;
+import com.example.jeeprojectspringboot.schoolmanager.Person;
 import com.example.jeeprojectspringboot.schoolmanager.Student;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -83,6 +84,10 @@ public class StudentService {
 		Set<ConstraintViolation<Student>> violations = validator.validate(student);
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(violations);
+		}
+		Person otherUser = personService.emailExists(student.getEmail());
+		if(otherUser != null && !otherUser.getId().equals(student.getId())) {
+			throw new IllegalArgumentException("Cet email est déjà attribué");
 		}
 
 		if (!isNew) {
