@@ -14,7 +14,7 @@
 	</c:forEach>
 	<div class="popup" id="popup" onclick="closePopup(event)">
 		<div class="popup-content">
-			<form action="${pageContext.request.contextPath}/pathway" method="GET">
+			<form action="${pageContext.request.contextPath}/pathways" method="post">
 				<label for="name">Nom :
 					<input type="text" id="name" name="name" class="name" required></label><br>
 				<label for="email">Email :

@@ -1,15 +1,10 @@
 package com.example.jeeprojectspringboot.controller;
-
-import com.example.jeeprojectspringboot.schoolmanager.Admin;
 import com.example.jeeprojectspringboot.schoolmanager.Person;
-import com.example.jeeprojectspringboot.schoolmanager.Professor;
-import com.example.jeeprojectspringboot.schoolmanager.Student;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller

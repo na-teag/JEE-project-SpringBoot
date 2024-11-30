@@ -2,7 +2,6 @@ package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import com.example.jeeprojectspringboot.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +21,6 @@ public class ScheduleController {
 
 	@Autowired
 	private CourseOccurrenceService courseOccurrenceService;
-
-	@Autowired
-	private HttpServletRequest request;
 
 
 	@GetMapping("/schedule")

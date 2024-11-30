@@ -1,14 +1,12 @@
 package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.Admin;
-import com.example.jeeprojectspringboot.schoolmanager.Classe;
 import com.example.jeeprojectspringboot.service.ClasseService;
 import com.example.jeeprojectspringboot.service.PathwayService;
 import com.example.jeeprojectspringboot.service.PromoService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

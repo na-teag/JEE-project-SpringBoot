@@ -16,7 +16,7 @@
 
     <div class="popup" id="popup" onclick="closePopup(event)">
         <div class="popup-content">
-            <form action="${pageContext.request.contextPath}/course" method="get">
+            <form action="${pageContext.request.contextPath}/courses" method="post">
                 <p>Professeur :</p>
                 <div id="professor-options">
                     <select name="professorId" required>

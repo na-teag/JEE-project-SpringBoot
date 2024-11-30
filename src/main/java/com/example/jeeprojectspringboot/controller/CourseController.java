@@ -46,7 +46,7 @@ public class CourseController {
     }
 
 
-    @GetMapping("/course")
+    @PostMapping("/courses")
     public String saveCourse(@RequestParam("subjectId") Long subjectId,
                              @RequestParam("professorId") Long professorId,
                              @RequestParam("classroom") String classroom,

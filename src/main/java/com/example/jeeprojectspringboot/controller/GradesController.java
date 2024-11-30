@@ -5,23 +5,17 @@ import com.example.jeeprojectspringboot.service.CourseService;
 import com.example.jeeprojectspringboot.service.GradesService;
 import com.example.jeeprojectspringboot.service.StudentGroupService;
 import com.example.jeeprojectspringboot.service.StudentService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-//@SessionAttributes({"user", "role", "courses", "coursesId", "classesId", "classesList", "studentsList", "selectedStudentGrade", "selectedStudentId"})
 public class GradesController {
 
     @Autowired

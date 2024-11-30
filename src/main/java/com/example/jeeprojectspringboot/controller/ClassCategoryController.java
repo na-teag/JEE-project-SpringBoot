@@ -2,11 +2,11 @@ package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import com.example.jeeprojectspringboot.service.ClassCategoryService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
@@ -15,9 +15,6 @@ public class ClassCategoryController {
 
     @Autowired
     private ClassCategoryService classCategoryService;
-
-    @Autowired
-    private HttpServletRequest request;
 
     @GetMapping("/classCategories")
     public String getClassCategories(HttpSession session, Model model) {
@@ -33,7 +30,7 @@ public class ClassCategoryController {
         return "login";
     }
 
-    @GetMapping("/classCategory")
+    @PostMapping("/classCategories")
     public String editClassCategory(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam("color") String color, @RequestParam(value = "id", required = false) Long id) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{
