@@ -78,11 +78,9 @@ public class CourseController {
                     course = new Course();
                 }
                 Professor professor = professorOpt.get();
-                for (Subject subject : professor.getTeachingSubjects()) {
-                    if (!subject.equals(subjectOpt.get())){
-                        model.addAttribute("errorMessage","Ce professeur ne peux pas enseigner cette matière");
-                        return "course";
-                    }
+                if (!professor.getTeachingSubjects().contains(subjectOpt.get())) {
+                    model.addAttribute("errorMessage", "Ce professeur ne peut pas enseigner cette matière");
+                    return "course";
                 }
                 course.setSubject(subjectOpt.get());
                 course.setProfessor(professorOpt.get());
