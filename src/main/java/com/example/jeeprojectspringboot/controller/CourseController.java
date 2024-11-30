@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +54,8 @@ public class CourseController {
                              @RequestParam("classroom") String classroom,
                              @RequestParam(required = false, value = "id") Long id,
                              @RequestParam("action") String action,
-                             HttpSession session) {
+                             HttpSession session,
+                             Model model) {
 
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
 
@@ -60,15 +63,26 @@ public class CourseController {
                 Optional<Subject> subjectOpt = subjectService.getSubjectById(subjectId);
                 Optional<Professor> professorOpt = professorService.getProfessorById(professorId);
                 if (subjectOpt.isEmpty() || professorOpt.isEmpty()) {
+                    model.addAttribute("errorMessage","Sujet ou professeur non valide");
+                    return "course";
                 }
                 Course course;
                 if (id != null) {
                     Optional<Course> existingCourse = courseService.getCourseById(id);
                     if (existingCourse.isEmpty()) {
+                        model.addAttribute("errorMessage","cours non valide");
+                        return "course";
                     }
                     course = existingCourse.get();
                 } else {
                     course = new Course();
+                }
+                Professor professor = professorOpt.get();
+                for (Subject subject : professor.getTeachingSubjects()) {
+                    if (!subject.equals(subjectOpt.get())){
+                        model.addAttribute("errorMessage","Ce professeur ne peux pas enseigner cette matière");
+                        return "course";
+                    }
                 }
                 course.setSubject(subjectOpt.get());
                 course.setProfessor(professorOpt.get());
