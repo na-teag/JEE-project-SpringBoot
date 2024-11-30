@@ -71,11 +71,11 @@ Par défaut, trois utilisateurs sont déjà présents:
 
 ### Gestion des mails
 
-Par défaut, les mails sont affichés dans le terminal, et son envoyé sur un serveur SMTP de [DebugMail](https://debugmail.io).
+Par défaut, les mails sont affichés dans le terminal, et sont envoyés sur un serveur SMTP de [DebugMail](https://debugmail.io).
 
 ## Lancer le serveur
 
-Pour lancer le projet sans remettre à zéro la bse de donnée, vous pouvez taper la commande suivante :
+Pour lancer le projet sans remettre à zéro la base de donnée, vous pouvez taper la commande suivante :
 ```sh
 mvn spring-boot:run
 ```
