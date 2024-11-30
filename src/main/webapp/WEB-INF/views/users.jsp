@@ -97,4 +97,3 @@
 </div>
 
 <%@ include file="fragments/footer.jsp" %>
-0

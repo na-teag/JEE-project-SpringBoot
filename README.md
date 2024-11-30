@@ -49,7 +49,7 @@ mysql -u root -p < resetDatabase.sql
 ```
 
 Le projet dispose d'un fichier pour mettre en place et peupler la base de données, avec des données par défaut.
-Pour ce faire, il va falloir compiler le projet et lancer l'application avec l'argument "reset". Cette commande lance également le serveur sur [localhost:8080/JEE-project-SpringBoot/](localhost:8080/JEE-project-SpringBoot/)
+Pour ce faire, il va falloir compiler le projet et lancer l'application avec l'argument "reset". Cette commande lance également le serveur sur [localhost:8080/JEE-project-SpringBoot/](http://localhost:8080/JEE-project-SpringBoot/)
 
 ```sh
 mvn spring-boot:run -Dspring-boot.run.arguments=reset
@@ -79,7 +79,7 @@ Pour lancer le projet sans remettre à zéro la bse de donnée, vous pouvez tape
 ```sh
 mvn spring-boot:run
 ```
-Cette commande lancera également le serveur sur le serveur sur [localhost:8080/JEE-project-SpringBoot/](localhost:8080/JEE-project-SpringBoot/)
+Cette commande lancera également le serveur sur [localhost:8080/JEE-project-SpringBoot/](http://localhost:8080/JEE-project-SpringBoot/)
 
 ## Architecture du projet
 
