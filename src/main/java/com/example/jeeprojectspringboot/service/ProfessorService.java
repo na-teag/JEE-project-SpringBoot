@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -83,10 +82,6 @@ public class ProfessorService {
 		}
 		professorRepository.deleteById(id);
 	}
-
-    public Optional<Professor> getProfessorById(Long id) {
-        return professorRepository.findById(id);
-    }
 
 
 }

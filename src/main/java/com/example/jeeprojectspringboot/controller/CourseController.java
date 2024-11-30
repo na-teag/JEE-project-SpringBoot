@@ -5,17 +5,11 @@ import com.example.jeeprojectspringboot.service.CourseService;
 import com.example.jeeprojectspringboot.service.GradesService;
 import com.example.jeeprojectspringboot.service.ProfessorService;
 import com.example.jeeprojectspringboot.service.SubjectService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class CourseController {
@@ -60,30 +54,29 @@ public class CourseController {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
 
             if ("save".equals(action)) {
-                Optional<Subject> subjectOpt = subjectService.getSubjectById(subjectId);
-                Optional<Professor> professorOpt = professorService.getProfessorById(professorId);
-                if (subjectOpt.isEmpty() || professorOpt.isEmpty()) {
+                Subject subject = subjectService.getSubject(subjectId);
+                Professor professor = professorService.findProfessorById(professorId);
+                if (subject == null || professor == null) {
                     model.addAttribute("errorMessage","Sujet ou professeur non valide");
                     return "course";
                 }
                 Course course;
                 if (id != null) {
-                    Optional<Course> existingCourse = courseService.getCourseById(id);
-                    if (existingCourse.isEmpty()) {
+                    Course existingCourse = courseService.getSelectedCourse(id);
+                    if (existingCourse == null) {
                         model.addAttribute("errorMessage","cours non valide");
                         return "course";
                     }
-                    course = existingCourse.get();
+                    course = existingCourse;
                 } else {
                     course = new Course();
                 }
-                Professor professor = professorOpt.get();
-                if (!professor.getTeachingSubjects().contains(subjectOpt.get())) {
+                if (!professor.getTeachingSubjects().contains(subject)) {
                     model.addAttribute("errorMessage", "Ce professeur ne peut pas enseigner cette matière");
                     return "course";
                 }
-                course.setSubject(subjectOpt.get());
-                course.setProfessor(professorOpt.get());
+                course.setSubject(subject);
+                course.setProfessor(professor);
                 course.setClassroom(classroom);
 
                 courseService.saveCourse(course);

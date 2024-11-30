@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class CourseOccurrenceController {
@@ -65,8 +64,7 @@ public class CourseOccurrenceController {
 
                 if ("save".equals(action)) {
                     courseOccurrenceService.validateSchedule(day,beginning,end);
-                    Optional<Course> existingCourse = courseService.getCourseById(courseId);
-                    Course course = existingCourse.get();
+                    Course course = courseService.getSelectedCourse(courseId);
                     ClassCategory classCategory = classCategoryService.getClassCategory(classCategoryId);
                     Professor professor = course.getProfessor();
                     String classroom = course.getClassroom();
