@@ -14,10 +14,12 @@ import java.time.format.DateTimeParseException;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final MailService mailService;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, MailService mailService) {
         this.personRepository = personRepository;
+        this.mailService = mailService;
     }
 
 
@@ -65,5 +67,31 @@ public class PersonService {
         return LocalDate.parse(birthdayStr, formatter);
     }
 
+
+    public void sendAccountCreationMail(Person person) {
+        mailService.sendEmail("do.not.reply@cytech.fr", person, "Création de compte", "Bonjour " + person.getFirstName() + ",\nVous recevez cet email car un compte viens de vous être créé sur l'ENT de CYTech.\nVotre identifiant est le suivant : " + person.getUsername() + "\nVotre mot de passe est votre date de naissance au format ddMMyyyy\n\nVous retrouverez sur l'ENT toutes les informations nécéssaires pour répondre à vos besoins.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
+    }
+
+    public void setUsername(Person person) {
+        // set the username based on the name
+        String username = "e-" + person.getFirstName().charAt(0);
+        username = username.toLowerCase();
+        String lastNameCut = person.getLastName().length() > 7 ? person.getLastName().substring(0, 7) : person.getLastName();
+        lastNameCut = lastNameCut.toLowerCase();
+        if (getUserByUsername(username + lastNameCut) != null) { // if the username already exists, add the most little number behind
+            int x = 1;
+            while (getUserByUsername(username + lastNameCut + x) != null) {
+                x++;
+            }
+            person.setUsername(username + lastNameCut + x);
+        } else {
+            person.setUsername(username + lastNameCut);
+        }
+    }
+
+    public void setPassword(Person person) {
+        String password = String.format("%02d%02d%d", person.getBirthday().getDayOfMonth(), person.getBirthday().getMonthValue(), person.getBirthday().getYear());
+        person.setPassword(password);
+    }
 
 }

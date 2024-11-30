@@ -47,8 +47,8 @@ public class ProfessorService {
 	public Professor saveProfessor(Professor professor, boolean isNew) {
 		if (isNew) {
 			personService.setPersonNumber(professor);
-			String password = String.format("%02d%02d%d", professor.getBirthday().getDayOfMonth(), professor.getBirthday().getMonthValue(), professor.getBirthday().getYear());
-			professor.setPassword(password);
+			personService.setPassword(professor);
+			personService.setUsername(professor);
 		} else {
 			// vérifier qu'on a pas enlevé la permission d'enseigner des cours qu'il enseigne déjà
 			List<Course> formerCourses = courseService.getCoursesOfProfessor(professor);
@@ -65,20 +65,7 @@ public class ProfessorService {
 			}
 		}
 
-		// set the username based on the name
-		String username = "e-" + professor.getFirstName().charAt(0);
-		username = username.toLowerCase();
-		String lastNameCut = professor.getLastName().length() > 7 ? professor.getLastName().substring(0, 7) : professor.getLastName();
-		lastNameCut = lastNameCut.toLowerCase();
-		if (personService.getUserByUsername(username + lastNameCut) != null) { // if the username already exists, add the most little number behind
-			int x = 1;
-			while (personService.getUserByUsername(username + lastNameCut + x) != null) {
-				x++;
-			}
-			professor.setUsername(username + lastNameCut + x);
-		} else {
-			professor.setUsername(username + lastNameCut);
-		}
+
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
@@ -88,6 +75,10 @@ public class ProfessorService {
 		Person otherUser = personService.emailExists(professor.getEmail());
 		if(otherUser != null && !otherUser.getId().equals(professor.getId())) {
 			throw new IllegalArgumentException("Cet email est déjà attribué");
+		}
+
+		if (isNew){
+			personService.sendAccountCreationMail(professor);
 		}
 
 		return professorRepository.save(professor);
