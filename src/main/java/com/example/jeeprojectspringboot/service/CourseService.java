@@ -1,6 +1,8 @@
 package com.example.jeeprojectspringboot.service;
 
+import com.example.jeeprojectspringboot.repository.CourseOccurrenceRepository;
 import com.example.jeeprojectspringboot.repository.CourseRepository;
+import com.example.jeeprojectspringboot.repository.GradesRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

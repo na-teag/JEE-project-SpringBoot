@@ -26,4 +26,6 @@ public interface CourseOccurrenceRepository extends JpaRepository<CourseOccurren
 
 	void deleteByProfessor(Professor professor);
 
+	CourseOccurrence save(CourseOccurrence courseOccurrence);
+
 }

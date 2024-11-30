@@ -41,6 +41,7 @@ public class ClassCategoryService {
         return classCategoryRepository.save(classCategory);
     }
 
+
     @Transactional
     public void deleteClassCategory(Long id) {
         classCategoryRepository.deleteById(id);
