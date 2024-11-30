@@ -129,13 +129,4 @@ public class ClasseService {
 			return e.getMessage();
 		}
 	}
-
-	/*
-	 * TODO when ClasseService finished :
-	 *
-	 * solve TODO in MailService line 72
-	 * solve TODO in StudentService line 79
-	 * solve TODO in UserController line 34
-	 * solve TODO in UserController line 77
-	 */
 }

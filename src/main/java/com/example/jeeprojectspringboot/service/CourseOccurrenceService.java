@@ -25,13 +25,9 @@ public class CourseOccurrenceService {
 		this.courseService = courseService;
 	}
 
-
-	/*
-	 * TODO when CourseOccurrenceService is created :
-	 *
-	 * add a deleteByProfessor() method that delete every CourseOccurrence of a given professor
-	 * use it the TODO in ProfessorService line 77
-	 */
+	public void deleteByProfessor(Professor professor){
+		courseOccurrenceRepository.deleteByProfessor(professor);
+	}
 
 	public CourseOccurrence getCourseOccurrenceById(long id){
 		return courseOccurrenceRepository.findById(id);

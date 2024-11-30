@@ -18,6 +18,9 @@ public class GradesService {
     @Autowired
     private GradesRepository gradesRepository;
 
+    @Autowired
+    private MailService mailService;
+
     public Grade getGradeById(long id){
         return gradesRepository.findById(id);
     }
@@ -25,8 +28,6 @@ public class GradesService {
     public List<Grade> getGradesForStudent(Student student) {
         return gradesRepository.findByStudent(student);
     }
-
-    // TODO ajouter la gestion des mails quand on assigne une nouvelle note
 
     @Transactional
     public void deleteGradesForStudent(Student student) {
@@ -59,10 +60,10 @@ public class GradesService {
             gradesRepository.save(grade);
 
             // Envoi d'email de notification
-           /* String subject = grade.getCourse().getSubject().getName();
+            String subject = grade.getCourse().getSubject().getName();
             String emailContent = "Bonjour, Vous recevez cet email car une nouvelle note concernant la matière " + subject + ".\nConsultez votre note sur l'ENT.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail";
-            mailManager.sendEmail("do.not.reply@cytech.fr", grade.getStudent().getEmail(), "Nouvelle note disponible", emailContent);
-*/
+            mailService.sendEmail("do.not.reply@cytech.fr", grade.getStudent(), "Nouvelle note disponible", emailContent);
+
             return "La note a été enregistrée avec succès.";
         } catch (Exception e) {
             return "Erreur lors de l'enregistrement de la note : " + e.getMessage();

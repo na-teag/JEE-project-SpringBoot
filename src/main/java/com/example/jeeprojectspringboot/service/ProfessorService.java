@@ -22,11 +22,14 @@ public class ProfessorService {
 	private final PersonService personService;
 	private final CourseService courseService;
 
+	private final CourseOccurrenceService courseOccurrenceService;
+
 	@Autowired
-	public ProfessorService(ProfessorRepository professorRepository, PersonService personService, CourseService courseService) {
+	public ProfessorService(ProfessorRepository professorRepository, PersonService personService, CourseService courseService, CourseOccurrenceService courseOccurrenceService) {
 		this.professorRepository = professorRepository;
 		this.personService = personService;
 		this.courseService = courseService;
+		this.courseOccurrenceService = courseOccurrenceService;
 	}
 
 	public List<Professor> getAllProfessors() {
@@ -76,7 +79,7 @@ public class ProfessorService {
 			if (!courseService.getCoursesOfProfessor(professor).isEmpty()){
 				throw new IllegalStateException("il y a des cours donnés par le professeur " + professor.getFirstName() + " " + professor.getLastName() + " d'enregistrés, veuillez les associer à un autre professeur ou les supprimer auparavant");
 			}
-			// courseOccurrenceService.deleteByProfessor(professor); TODO utiliser CourseOccurrenceService quand il existera
+			courseOccurrenceService.deleteByProfessor(professor);
 		}
 		professorRepository.deleteById(id);
 	}
