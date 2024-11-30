@@ -4,6 +4,7 @@ import com.example.jeeprojectspringboot.repository.ProfessorRepository;
 import com.example.jeeprojectspringboot.schoolmanager.Course;
 import com.example.jeeprojectspringboot.schoolmanager.Person;
 import com.example.jeeprojectspringboot.schoolmanager.Professor;
+import com.example.jeeprojectspringboot.schoolmanager.Subject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -51,8 +52,16 @@ public class ProfessorService {
 		} else {
 			// vérifier qu'on a pas enlevé la permission d'enseigner des cours qu'il enseigne déjà
 			List<Course> formerCourses = courseService.getCoursesOfProfessor(professor);
+			List<Long> subjectIdsList = new ArrayList<>();
 			if (!formerCourses.isEmpty()) {
-				throw new IllegalStateException("Le professeur " + professor.getFirstName() + " " + professor.getLastName() + " enseigne déjà des cours de la matière " + formerCourses.getFirst().getSubject().getName() + ". Veuillez supprimer ces cours ou leur assigner un autre professeur");
+				for (Subject subject : professor.getTeachingSubjects()) { // faire une liste pour comparer les id, sinon la comparaison est toujours fausse
+					subjectIdsList.add(subject.getId());
+				}
+				for (Course course : formerCourses) {
+					if (!subjectIdsList.contains(course.getSubject().getId())) {
+						throw new IllegalStateException("Le professeur " + professor.getFirstName() + " " + professor.getLastName() + " enseigne déjà des cours de la matière " + course.getSubject().getName() + ". Veuillez supprimer ces cours ou leur assigner un autre professeur");
+					}
+				}
 			}
 		}
 
