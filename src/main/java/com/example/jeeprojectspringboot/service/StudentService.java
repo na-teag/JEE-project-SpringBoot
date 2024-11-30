@@ -57,28 +57,14 @@ public class StudentService {
 	public Student saveStudent(Student student, boolean isNew, Long formerClasseId) {
 		if (isNew) {
 			personService.setPersonNumber(student);
-			String password = String.format("%02d%02d%d", student.getBirthday().getDayOfMonth(), student.getBirthday().getMonthValue(), student.getBirthday().getYear());
-			student.setPassword(password);
+			personService.setPassword(student);
+			personService.setUsername(student);
 		}
 
 		if (!isNew && formerClasseId == null) {
 			throw new IllegalArgumentException("Student cannot already exists and have no former classe");
 		}
 
-		// set the username based on the name
-		String username = "e-" + student.getFirstName().charAt(0);
-		username = username.toLowerCase();
-		String lastNameCut = student.getLastName().length() > 7 ? student.getLastName().substring(0, 7) : student.getLastName();
-		lastNameCut = lastNameCut.toLowerCase();
-		if (personService.getUserByUsername(username + lastNameCut) != null) { // if the username already exists, add the most little number behind
-			int x = 1;
-			while (personService.getUserByUsername(username + lastNameCut + x) != null) {
-				x++;
-			}
-			student.setUsername(username + lastNameCut + x);
-		} else {
-			student.setUsername(username + lastNameCut);
-		}
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<Student>> violations = validator.validate(student);
@@ -95,6 +81,7 @@ public class StudentService {
 				mailService.sendEmail("do.not.reply@cytech.fr", student, "Changement dans vos inscriptions", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + classeService.getClasse(student.getClasse().getId()).getName() + ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
 			}
 		} else {
+			personService.sendAccountCreationMail(student);
 			mailService.sendEmail("do.not.reply@cytech.fr", student, "Première inscription à CYTech", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + classeService.getClasse(student.getClasse().getId()).getName() + ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
 		}
 

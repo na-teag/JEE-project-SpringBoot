@@ -38,24 +38,10 @@ public class AdminService {
 	public Admin saveAdmin(Admin admin, boolean isNew) {
 		if (isNew) {
 			personService.setPersonNumber(admin);
-			String password = String.format("%02d%02d%d", admin.getBirthday().getDayOfMonth(), admin.getBirthday().getMonthValue(), admin.getBirthday().getYear());
-			admin.setPassword(password);
+			personService.setPassword(admin);
+			personService.setUsername(admin);
 		}
 
-		// set the username based on the name
-		String username = "e-" + admin.getFirstName().charAt(0);
-		username = username.toLowerCase();
-		String lastNameCut = admin.getLastName().length() > 7 ? admin.getLastName().substring(0, 7) : admin.getLastName();
-		lastNameCut = lastNameCut.toLowerCase();
-		if (personService.getUserByUsername(username + lastNameCut) != null) { // if the username already exists, add the most little number behind
-			int x = 1;
-			while (personService.getUserByUsername(username + lastNameCut + x) != null) {
-				x++;
-			}
-			admin.setUsername(username + lastNameCut + x);
-		} else {
-			admin.setUsername(username + lastNameCut);
-		}
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<Admin>> violations = validator.validate(admin);
@@ -65,6 +51,10 @@ public class AdminService {
 		Person otherUser = personService.emailExists(admin.getEmail());
 		if(otherUser != null && !otherUser.getId().equals(admin.getId())) {
 			throw new IllegalArgumentException("Cet email est déjà attribué");
+		}
+
+		if (isNew){
+			personService.sendAccountCreationMail(admin);
 		}
 
 		return adminRepository.save(admin);
