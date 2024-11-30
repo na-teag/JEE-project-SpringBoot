@@ -1,6 +1,6 @@
 package com.example.jeeprojectspringboot.service;
 
-import com.example.jeeprojectspringboot.repository.CourseOccurenceRepository;
+import com.example.jeeprojectspringboot.repository.CourseOccurrenceRepository;
 import com.example.jeeprojectspringboot.repository.CourseRepository;
 import com.example.jeeprojectspringboot.repository.GradesRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
@@ -10,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
