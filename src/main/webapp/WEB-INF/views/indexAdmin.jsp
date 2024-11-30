@@ -30,14 +30,14 @@
                 <p>Éditez les promos</p>
             </section>
         </a>
+    </div>
+    <div class="featured-sections">
         <a href="${pageContext.request.contextPath}/subjects">
             <section>
                 <h3>Gérer les sujets</h3>
                 <p>Éditez les sujets possibles des cours</p>
             </section>
         </a>
-    </div>
-    <div class="featured-sections">
         <a href="${pageContext.request.contextPath}/courses">
             <section>
                 <h3>Gérer les cours</h3>

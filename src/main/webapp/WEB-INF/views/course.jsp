@@ -38,7 +38,7 @@
 
                 <label for="classroom">Salle de classe :
                     <input type="text" id="classroom" name="classroom" required>
-                </label>
+                </label><br>
 
                 <input type="hidden" name="id" class="id" value="">
 

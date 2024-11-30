@@ -1,7 +1,9 @@
 package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.ProfessorRepository;
+import com.example.jeeprojectspringboot.schoolmanager.Person;
 import com.example.jeeprojectspringboot.schoolmanager.Professor;
+import com.example.jeeprojectspringboot.schoolmanager.Subject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -10,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -45,6 +49,19 @@ public class ProfessorService {
 			personService.setPersonNumber(professor);
 			String password = String.format("%02d%02d%d", professor.getBirthday().getDayOfMonth(), professor.getBirthday().getMonthValue(), professor.getBirthday().getYear());
 			professor.setPassword(password);
+		} else {
+			// vérifier qu'on a pas enlevé la permission d'enseigner des cours qu'il enseigne déjà
+			Optional<Professor> originalProfessorOptional = professorRepository.findById(professor.getId());
+			if (originalProfessorOptional.isPresent()) {
+				Professor originalProfessor = originalProfessorOptional.get();
+				List<Subject> missingSubjects = originalProfessor.getTeachingSubjects();
+				missingSubjects.removeAll(professor.getTeachingSubjects());
+				for (Subject subject : missingSubjects) {
+					if (!courseService.getCoursesBySubject(subject).isEmpty()){
+						throw new IllegalStateException("Le professeur " + professor.getFirstName() + " " + professor.getLastName() + " enseigne déjà des cours de " + subject.getName() + ".\nVeuillez supprimer ces cours ou leur assigner un autre professeur");
+					}
+				}
+			}
 		}
 
 		// set the username based on the name
@@ -67,6 +84,10 @@ public class ProfessorService {
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(violations);
 		}
+		Person otherUser = personService.emailExists(professor.getEmail());
+		if(otherUser != null && !otherUser.getId().equals(professor.getId())) {
+			throw new IllegalArgumentException("Cet email est déjà attribué");
+		}
 
 		return professorRepository.save(professor);
 	}
@@ -75,8 +96,12 @@ public class ProfessorService {
 	public void deleteProfessorById(Long id) throws IllegalStateException {
 		Professor professor = findProfessorById(id);
 		if (professor != null) {
-			if (!courseService.getCoursesOfProfessor(professor).isEmpty()){
-				throw new IllegalStateException("il y a des cours donnés par le professeur " + professor.getFirstName() + " " + professor.getLastName() + " d'enregistrés, veuillez les associer à un autre professeur ou les supprimer auparavant");
+			if (!professor.getTeachingSubjects().isEmpty()) {
+				professor.setTeachingSubjects(new ArrayList<>());
+				saveProfessor(professor, false);
+			}
+			if (!courseService.getCoursesOfProfessor(professor).isEmpty()) {
+				throw new IllegalStateException("Il y a des cours enseignés par le professeur " + professor.getFirstName() + " " + professor.getLastName() + " d'enregistés.\nVeuillez supprimer ces cours, ou leur assigner un autre professeur");
 			}
 			courseOccurrenceService.deleteByProfessor(professor);
 		}

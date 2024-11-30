@@ -2,6 +2,7 @@ package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.AdminRepository;
 import com.example.jeeprojectspringboot.schoolmanager.Admin;
+import com.example.jeeprojectspringboot.schoolmanager.Person;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -61,6 +62,11 @@ public class AdminService {
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException(violations);
 		}
+		Person otherUser = personService.emailExists(admin.getEmail());
+		if(otherUser != null && !otherUser.getId().equals(admin.getId())) {
+			throw new IllegalArgumentException("Cet email est déjà attribué");
+		}
+
 		return adminRepository.save(admin);
 	}
 
