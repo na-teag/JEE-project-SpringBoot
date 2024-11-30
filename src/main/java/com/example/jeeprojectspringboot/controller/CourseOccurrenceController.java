@@ -1,11 +1,9 @@
 package com.example.jeeprojectspringboot.controller;
 
-import com.example.jeeprojectspringboot.repository.CourseOccurrenceRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import com.example.jeeprojectspringboot.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +28,6 @@ public class CourseOccurrenceController {
     @Autowired
     private ProfessorService professorService;
 
-    @Autowired
-    private CourseOccurrenceRepository courseOccurrenceRepository;
-
     @GetMapping("/CourseOccurrences")
     public String showScheduleForm(Model model, HttpSession session) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
@@ -50,7 +45,7 @@ public class CourseOccurrenceController {
         return "login";
     }
 
-    @GetMapping("/CourseOccurrence")
+    @PostMapping("/CourseOccurrences")
     public String manageCourseOccurrence(
             @RequestParam("action") String action,
             @RequestParam("day") String dayStr,

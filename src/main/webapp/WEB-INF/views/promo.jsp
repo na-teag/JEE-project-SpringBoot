@@ -14,7 +14,7 @@
 	</c:forEach>
 	<div class="popup" id="popup" onclick="closePopup(event)">
 		<div class="popup-content">
-			<form action="${pageContext.request.contextPath}/promo" method="GET">
+			<form action="${pageContext.request.contextPath}/promos" method="post">
 				<label for="name">Nom :
 					<input type="text" id="name" name="name" class="name" required></label><br>
 				<label for="email">Email :
@@ -25,7 +25,7 @@
 			</form>
 		</div>
 	</div>
-	<button onclick="openPopup(this, true, null, null, null)">Créer une filière</button>
+	<button onclick="openPopup(this, true, null, null, null)">Créer une promo</button>
 	<script src="${pageContext.request.contextPath}/assets/js/pathwaysAndPromos.js"></script>
 </div>
 

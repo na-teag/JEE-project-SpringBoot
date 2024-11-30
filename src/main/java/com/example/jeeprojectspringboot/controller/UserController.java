@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class UserController {
 		return "users";
 	}
 
-	@GetMapping("/user")
+	@PostMapping("/users")
 	public String editUser(Model model, HttpSession session, @RequestParam("action") String action, @RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName, @RequestParam("email") String email, @RequestParam(value = "id", required = false) Long id, @RequestParam("number") String number, @RequestParam("street") String street, @RequestParam("city") String city, @RequestParam("country") String country, @RequestParam("postalCode") int postalCode, @RequestParam(value = "classeId", required = false) Long classeId, @RequestParam(value= "subjectId", required = false) List<String> subjectIdsString, @RequestParam(value = "birthday", required = false) String birthdayStr) {
 		if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
 			try {

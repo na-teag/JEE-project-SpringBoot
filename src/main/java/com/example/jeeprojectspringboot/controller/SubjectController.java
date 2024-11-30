@@ -2,11 +2,11 @@ package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
 import com.example.jeeprojectspringboot.service.SubjectService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
@@ -27,10 +27,10 @@ public class SubjectController {
                 return "subject";
             }
         }
-        return "login";
+        return "error";
     }
 
-    @GetMapping("/subject")
+    @PostMapping("/subjects")
     public String logout(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam(value = "id", required = false) Long id) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{

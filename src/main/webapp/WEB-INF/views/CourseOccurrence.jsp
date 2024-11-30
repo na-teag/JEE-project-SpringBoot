@@ -22,7 +22,7 @@
 
   <div class="popup" id="popup" onclick="closePopup(event)">
     <div class="popup-content">
-      <form action="${pageContext.request.contextPath}/CourseOccurrence" method="get">
+      <form action="${pageContext.request.contextPath}/CourseOccurrences" method="post">
         <label for="course">Cours :</label>
         <select id="course" name="course" required>
           <option value="">Sélectionnez un cours</option>

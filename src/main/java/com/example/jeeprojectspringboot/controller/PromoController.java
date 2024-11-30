@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
@@ -16,7 +17,7 @@ public class PromoController {
     private PromoService promoService;
 
     @GetMapping("/promos")
-    public String login(HttpSession session, Model model) {
+    public String getPromo(HttpSession session, Model model) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{
                 model.addAttribute("promos", promoService.getAllPromo());
@@ -26,11 +27,11 @@ public class PromoController {
                 return "promo";
             }
         }
-        return "login";
+        return "error";
     }
 
-    @GetMapping("/promo")
-    public String logout(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam("email") String email, @RequestParam(value = "id", required = false) Long id) {
+    @PostMapping("/promos")
+    public String createOrUpdatePromo(Model model,HttpSession session, @RequestParam("action") String action, @RequestParam("name") String name, @RequestParam("email") String email, @RequestParam(value = "id", required = false) Long id) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))){
             try{
                 if ("save".equals(action)) {
