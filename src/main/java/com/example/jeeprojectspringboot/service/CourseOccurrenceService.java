@@ -2,14 +2,17 @@ package com.example.jeeprojectspringboot.service;
 
 import com.example.jeeprojectspringboot.repository.CourseOccurrenceRepository;
 import com.example.jeeprojectspringboot.schoolmanager.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalTime;
+import java.util.*;
 
 @Service
 public class CourseOccurrenceService {
@@ -19,6 +22,7 @@ public class CourseOccurrenceService {
 	private final CourseService courseService;
 
 	@Autowired
+	@Lazy
 	public CourseOccurrenceService(CourseOccurrenceRepository courseOccurrenceRepository, PersonService personService, CourseService courseService) {
 		this.courseOccurrenceRepository = courseOccurrenceRepository;
 		this.personService = personService;
@@ -45,6 +49,8 @@ public class CourseOccurrenceService {
 		}
 		return courseOccurrenceRepository.findByCourse(course);
 	}
+
+	public List<CourseOccurrence> getAllCourseOccurrence(){return courseOccurrenceRepository.findAll();}
 
 	private static Map<String, String> getCourseDetails(CourseOccurrence courseOccurrence) {
 		Map<String, String> courseDetails = new HashMap<>();
@@ -98,5 +104,30 @@ public class CourseOccurrenceService {
 			schedule = getScheduleForCoursesAndDays(days, schedule, courses);
 		}
 		return schedule;
+	}
+
+	public void validateSchedule(LocalDate day, LocalTime beginning, LocalTime end) {
+		if (day.getDayOfWeek().getValue() == 6 || day.getDayOfWeek().getValue() == 7) {
+			throw new IllegalArgumentException("Les cours ne peuvent pas être planifiés un samedi ou un dimanche.");
+		}
+		if (beginning.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(20, 0))) {
+			throw new IllegalArgumentException("Les cours doivent se dérouler entre 08h00 et 20h00.");
+		}
+		if (beginning.getMinute() % 15 != 0 || end.getMinute() % 15 != 0) {
+			throw new IllegalArgumentException("Les horaires doivent finir en 00, 15, 30 ou 45 minutes.");
+		}
+		if (!beginning.isBefore(end)) {
+			throw new IllegalArgumentException("L'heure de début doit être avant l'heure de fin.");
+		}
+	}
+
+	@Transactional
+	public CourseOccurrence save(CourseOccurrence courseOccurrence) {
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<CourseOccurrence>> errors = validator.validate(courseOccurrence);
+		if (!errors.isEmpty()) {
+			throw new ConstraintViolationException(errors);
+		}
+		return courseOccurrenceRepository.save(courseOccurrence);
 	}
 }

@@ -44,16 +44,10 @@
                 <p>Éditez les cours, l'enseignant, les groupes et plus encore</p>
             </section>
         </a>
-        <a href="${pageContext.request.contextPath}/scheduleAdmin">
+        <a href="${pageContext.request.contextPath}/CourseOccurrences">
             <section>
-                <h3>Ajouter une occurrence de cours</h3>
-                <p>Ajouter un cours</p>
-            </section>
-        </a>
-        <a href="${pageContext.request.contextPath}/admindeletecours">
-            <section>
-                <h3>Supprimer une occurrence de cours</h3>
-                <p>Supprimer un cours</p>
+                <h3>Gérer les occurrences de cours</h3>
+                <p>Éditez les occurences de cours</p>
             </section>
         </a>
         <a href="${pageContext.request.contextPath}/classCategories">
