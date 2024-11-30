@@ -21,12 +21,15 @@ public class StudentService {
 	private final MailService mailService;
 	private final GradesService gradesService;
 
+	private final  ClasseService classeService;
+
 	@Autowired
-	public StudentService(StudentRepository studentRepository, PersonService personService, MailService mailService, GradesService gradesService) {
+	public StudentService(StudentRepository studentRepository, PersonService personService, MailService mailService, GradesService gradesService, ClasseService classeService) {
 		this.studentRepository = studentRepository;
 		this.personService = personService;
 		this.mailService = mailService;
 		this.gradesService = gradesService;
+		this.classeService = classeService;
 	}
 
 	public List<Student> getAllStudents() {
@@ -83,9 +86,11 @@ public class StudentService {
 		}
 
 		if (!isNew) {
-			if (formerClasseId.equals(student.getClasse().getId())) { // TODO rajouter le nom de la classe quand le ClasseService sera terminé -> -> -> -> -> -> -> -> -> -> -> -> -> ->  <-
-				mailService.sendEmail("do.not.reply@cytech.fr", student, "Changement dans vos inscription", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + /* classeManager.getClasseById(classeId).getName() + */ ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
+			if (!formerClasseId.equals(student.getClasse().getId())) {
+				mailService.sendEmail("do.not.reply@cytech.fr", student, "Changement dans vos inscriptions", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + classeService.getClasse(student.getClasse().getId()).getName() + ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
 			}
+		} else {
+			mailService.sendEmail("do.not.reply@cytech.fr", student, "Première inscription à CYTech", "Bonjour, Vous recevez cet email car vous venez d'être attribué à une nouvelle classe : " + classeService.getClasse(student.getClasse().getId()).getName() + ".\nConsultez votre emploi du temps pour voir vos nouveau cours.\n\nBien cordialement, le service administratif.\n\nP.-S. Merci de ne pas répondre à ce mail");
 		}
 
 		return studentRepository.save(student);

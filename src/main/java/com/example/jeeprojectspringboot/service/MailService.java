@@ -16,6 +16,9 @@ public class MailService {
 	private final StudentService studentService;
 
 	@Autowired
+	private ClasseService classeService;
+
+	@Autowired
 	public MailService(@Lazy StudentService studentService) {
 		this.studentService = studentService;
 	}
@@ -70,8 +73,7 @@ public class MailService {
 	}
 
 	private void sendEmailToGroup(String senderEmail, StudentGroup studentGroup, String object, String body) {
-		// TODO ajouter le findClasseByStudentGroup() quand ClasseService sera fait
-		List<Classe> classeList = new ArrayList<>();//classeManager.getClassesByStudentGroup(studentGroup);
+		List<Classe> classeList = classeService.getClassesByStudentGroup(studentGroup);
 		List<Student> studentList = new ArrayList<>();
 		for (Classe classe : classeList) {
 			studentList.addAll(studentService.findStudentByClasseId(classe.getId()));

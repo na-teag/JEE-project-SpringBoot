@@ -41,8 +41,8 @@ public class UserController {
 				model.addAttribute("studentUsers", studentService.getAllStudents());
 				model.addAttribute("adminUsers", adminService.getAllAdmins());
 				model.addAttribute("profUsers", professorService.getAllProfessors());
-				//model.addAttribute("classes", classeService.); TODO ajouter getAllClasses() quand ClasseService existera
-				//model.addAttribute("subjects", subjectService.); TODO ajouter getAllSubject() quand SubjectService existera
+				model.addAttribute("classes", classeService.getListOfClasses());
+				model.addAttribute("subjects", subjectService.getAllSubjects());
 				return "users";
 			} catch (Exception e){
 				e.printStackTrace();
@@ -75,7 +75,7 @@ public class UserController {
 					student.setLastName(lastName);
 					student.setEmail(email);
 					student.setAddress(address);
-					// student.setClasse(classeService.getClasseById(classeId); TODO add when classService is created
+					student.setClasse(classeService.getClasse(classeId));
 					if (id == null) {
 						// if there is no id, then it is a new object
 						LocalDate birthday = personService.getBirthday(birthdayStr);
@@ -84,13 +84,29 @@ public class UserController {
 					} else {
 						// if there is an id the object already exists
 						Classe formerClasse = studentService.findStudentById(id).getClasse();
-						studentService.saveStudent(student, false, formerClasse.getId());
+						Student studentModify = studentService.findStudentById(id);
+						studentModify.setFirstName(firstName);
+						studentModify.setLastName(lastName);
+						studentModify.setEmail(email);
+						studentModify.setAddress(address);
+						studentModify.setClasse(classeService.getClasse(classeId));
+						studentService.saveStudent(studentModify, false, formerClasse.getId());
 					}
+					model.addAttribute("studentUsers", studentService.getAllStudents());
+					model.addAttribute("adminUsers", adminService.getAllAdmins());
+					model.addAttribute("profUsers", professorService.getAllProfessors());
+					model.addAttribute("classes", classeService.getListOfClasses());
+					model.addAttribute("subjects", subjectService.getAllSubjects());
 					return "users";
 				} else if ("saveProf".equals(action)) {
 					// if the request is about the creation/modification of a professor
 					if (subjectIdsString == null || subjectIdsString.isEmpty()) {
 						model.addAttribute("errorMessage", "Paramètres manquants, impossible de traiter la requête");
+						model.addAttribute("studentUsers", studentService.getAllStudents());
+						model.addAttribute("adminUsers", adminService.getAllAdmins());
+						model.addAttribute("profUsers", professorService.getAllProfessors());
+						model.addAttribute("classes", classeService.getListOfClasses());
+						model.addAttribute("subjects", subjectService.getAllSubjects());
 						return "users";
 					}
 
@@ -99,9 +115,14 @@ public class UserController {
 					Subject subject;
 					if (!subjectIdsString.contains("aucun")){
 						for (String studentId : subjectIdsString) {
-							subject = null; //subjectService.getSubjectById(studentId); TODO
+							subject = subjectService.getSubject(Long.valueOf(studentId));
 							if (subject == null) {
 								model.addAttribute("errorMessage", "Le sujet n'existe pas");
+								model.addAttribute("studentUsers", studentService.getAllStudents());
+								model.addAttribute("adminUsers", adminService.getAllAdmins());
+								model.addAttribute("profUsers", professorService.getAllProfessors());
+								model.addAttribute("classes", classeService.getListOfClasses());
+								model.addAttribute("subjects", subjectService.getAllSubjects());
 								return "users";
 							}
 							subjects.add(subject);
@@ -129,6 +150,11 @@ public class UserController {
 						// if there is an id the object already exists
 						professorService.saveProfessor(professor, false);
 					}
+					model.addAttribute("studentUsers", studentService.getAllStudents());
+					model.addAttribute("adminUsers", adminService.getAllAdmins());
+					model.addAttribute("profUsers", professorService.getAllProfessors());
+					model.addAttribute("classes", classeService.getListOfClasses());
+					model.addAttribute("subjects", subjectService.getAllSubjects());
 					return "users";
 				} else if ("saveAdmin".equals(action)) {
 					// if the request is about the creation/modification of an administrator
@@ -154,6 +180,11 @@ public class UserController {
 						// if there is an id the object already exists
 						adminService.saveAdmin(admin, false);
 					}
+					model.addAttribute("studentUsers", studentService.getAllStudents());
+					model.addAttribute("adminUsers", adminService.getAllAdmins());
+					model.addAttribute("profUsers", professorService.getAllProfessors());
+					model.addAttribute("classes", classeService.getListOfClasses());
+					model.addAttribute("subjects", subjectService.getAllSubjects());
 					return "users";
 				} else if ("delete".equals(action) && id != null) {
 					// if the request is about the deletion of a user, no matter the type
@@ -169,14 +200,29 @@ public class UserController {
 							return "redirect:/logout";
 						}
 					}
+					model.addAttribute("studentUsers", studentService.getAllStudents());
+					model.addAttribute("adminUsers", adminService.getAllAdmins());
+					model.addAttribute("profUsers", professorService.getAllProfessors());
+					model.addAttribute("classes", classeService.getListOfClasses());
+					model.addAttribute("subjects", subjectService.getAllSubjects());
 					return "users";
 				} else {
 					model.addAttribute("errorMessage", "Requête non reconnue");
+					model.addAttribute("studentUsers", studentService.getAllStudents());
+					model.addAttribute("adminUsers", adminService.getAllAdmins());
+					model.addAttribute("profUsers", professorService.getAllProfessors());
+					model.addAttribute("classes", classeService.getListOfClasses());
+					model.addAttribute("subjects", subjectService.getAllSubjects());
 					return "users";
 				}
 			} catch (Exception e){
 				e.printStackTrace();
 				model.addAttribute("errorMessage", e.getMessage());
+				model.addAttribute("studentUsers", studentService.getAllStudents());
+				model.addAttribute("adminUsers", adminService.getAllAdmins());
+				model.addAttribute("profUsers", professorService.getAllProfessors());
+				model.addAttribute("classes", classeService.getListOfClasses());
+				model.addAttribute("subjects", subjectService.getAllSubjects());
 				return "users";
 			}
 		}

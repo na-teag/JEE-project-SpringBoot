@@ -65,8 +65,6 @@ public class ClasseController {
 
             if (result != null) {
                 model.addAttribute("errorMessage", result);
-            } else {
-                model.addAttribute("errorMessage", "Opération réussie");
             }
 
             model.addAttribute("classes", classeService.getListOfClasses());
