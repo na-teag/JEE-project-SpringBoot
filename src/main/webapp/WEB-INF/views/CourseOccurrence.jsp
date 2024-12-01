@@ -12,7 +12,7 @@
   </c:if>
 
     <c:forEach var="courseOccurrence" items="${courseOccurrences}">
-      <div class="course-occurrence-item" onclick="openPopup(this, false, '${courseOccurrence.course.id}', '${courseOccurrence.category.id}', '${courseOccurrence.day}', '${courseOccurrence.beginning}', '${courseOccurrence.end}', '${courseOccurrence.id}')">
+      <div class="course-occurrence-item" onclick="openPopup(this, false, '${courseOccurrence.course.id}', '${courseOccurrence.category.id}', '${courseOccurrence.day}', '${courseOccurrence.beginning}', '${courseOccurrence.end}', '${courseOccurrence.id}', '${courseOccurrence.professor.id}', '${courseOccurrence.classroom}')">
         <h4>${courseOccurrence.course.subject.name}</h4>
         <p>Le ${courseOccurrence.day.format(dateFormatter)}</p>
         <p>De ${courseOccurrence.beginning} à ${courseOccurrence.end}</p>
@@ -52,13 +52,25 @@
         <label for="end">Heure de fin :</label>
         <input type="time" id="end" name="end" required><br>
 
+        Optionnel :
+        <label for="professor"> Professeur :</label>
+        <select name="professor" id="professor">
+          <option value="" disabled selected>Sélectionnez un professeur</option>
+          <c:forEach var="professor" items="${professors}">
+            <option value="${professor.id}">${professor.firstName} ${professor.lastName}</option>
+          </c:forEach>
+        </select><br>
+
+        <label for="classroom" > Salle de classe :</label>
+        <input type="text" id="classroom" name="classroom" placeholder="Numéro de salle"/>
+
         <input type="hidden" name="id" class="id" value="">
         <button type="submit" name="action" value="save">Enregistrer</button>
         <button type="submit" name="action" value="delete" style="color: red;">Supprimer l'occurrence</button>
       </form>
     </div>
   </div>
-  <button onclick="openPopup(this, true, null, null, null, null, null)">Créer une occurrence</button>
+  <button onclick="openPopup(this, true, null, null, null, null, null, null, null)">Créer une occurrence</button>
   <script src="${pageContext.request.contextPath}/assets/js/courseOccurrence.js"></script>
 
 </div>

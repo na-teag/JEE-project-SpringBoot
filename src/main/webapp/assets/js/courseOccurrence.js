@@ -1,7 +1,4 @@
-function openPopup(button, isNew, courseId, categoryId, day, beginning, end, id) {
-    const popup = document.getElementById('popup');
-    popup.style.display = 'block';
-
+function openPopup(button, isNew, courseId, categoryId, day, beginning, end, id, professorId, classroom) {
     if (!isNew) {
         document.getElementById('course').value = courseId;
         document.getElementById('classCategory').value = categoryId;
@@ -9,8 +6,9 @@ function openPopup(button, isNew, courseId, categoryId, day, beginning, end, id)
         document.getElementById('beginning').value = beginning;
         document.getElementById('end').value = end;
         document.querySelector('.id').value = id;
+        document.getElementById("professor").value = professorId;
+        document.getElementById("classroom").value = classroom;
         document.querySelector('button[name="action"][value="delete"]').style.display = 'inline-block';
-
     } else {
         document.getElementById('course').value = '';
         document.getElementById('classCategory').value = '';
@@ -18,9 +16,12 @@ function openPopup(button, isNew, courseId, categoryId, day, beginning, end, id)
         document.getElementById('beginning').value = '';
         document.getElementById('end').value = '';
         document.querySelector('.id').value = '';
+        document.getElementById("professor").value = '';
+        document.getElementById("classroom").value = '';
         document.querySelector('button[name="action"][value="delete"]').style.display = 'none';
 
     }
+    document.getElementById('popup').style.display = 'flex'
 }
 
 function closePopup(event) {
