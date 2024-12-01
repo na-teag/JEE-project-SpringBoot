@@ -34,7 +34,7 @@
     <div class="featured-sections">
         <a href="${pageContext.request.contextPath}/subjects">
             <section>
-                <h3>Gérer les sujets</h3>
+                <h3>Gérer les matières</h3>
                 <p>Éditez les sujets possibles des cours</p>
             </section>
         </a>
@@ -46,7 +46,7 @@
         </a>
         <a href="${pageContext.request.contextPath}/CourseOccurrences">
             <section>
-                <h3>Gérer les occurrences de cours</h3>
+                <h3>Gérer la plannification des cours</h3>
                 <p>Éditez les occurences de cours</p>
             </section>
         </a>
