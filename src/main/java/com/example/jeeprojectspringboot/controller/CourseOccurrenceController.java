@@ -55,6 +55,8 @@ public class CourseOccurrenceController {
             @RequestParam("course") Long courseId,
             @RequestParam("classCategory") Long classCategoryId,
             @RequestParam(value = "id", required = false) Long id,
+            @RequestParam(value = "professor", required = false) Long professorId,
+            @RequestParam(value = "classroom", required = false) String newClassroom,
             Model model,
             HttpSession session
     ) {
@@ -68,8 +70,18 @@ public class CourseOccurrenceController {
                     courseOccurrenceService.validateSchedule(day,beginning,end);
                     Course course = courseService.getSelectedCourse(courseId);
                     ClassCategory classCategory = classCategoryService.getClassCategory(classCategoryId);
-                    Professor professor = course.getProfessor();
-                    String classroom = course.getClassroom();
+                    Professor professor;
+                    if (professorId == null){
+                        professor = course.getProfessor();
+                    } else {
+                        professor = professorService.findProfessorById(professorId);
+                    }
+                    String classroom;
+                    if (newClassroom == ""){
+                        classroom = course.getClassroom();
+                    } else {
+                        classroom = newClassroom;
+                    }
                     CourseOccurrence courseOccurrence = new CourseOccurrence();
 
                     if (id == null) {
