@@ -5,6 +5,8 @@ import com.example.jeeprojectspringboot.schoolmanager.StudentGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentGroupService {
 
@@ -18,5 +20,7 @@ public class StudentGroupService {
     }
 
     public void deleteById(Long id){studentGroupRepository.deleteById(id);}
+
+    public List<StudentGroup> getAllStudentGroups() { return studentGroupRepository.findAll();}
 
 }

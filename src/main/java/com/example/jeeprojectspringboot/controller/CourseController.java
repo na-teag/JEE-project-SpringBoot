@@ -1,15 +1,15 @@
 package com.example.jeeprojectspringboot.controller;
 
 import com.example.jeeprojectspringboot.schoolmanager.*;
-import com.example.jeeprojectspringboot.service.CourseService;
-import com.example.jeeprojectspringboot.service.GradesService;
-import com.example.jeeprojectspringboot.service.ProfessorService;
-import com.example.jeeprojectspringboot.service.SubjectService;
+import com.example.jeeprojectspringboot.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class CourseController {
@@ -24,18 +24,16 @@ public class CourseController {
     private ProfessorService professorService;
 
     @Autowired
-    private GradesService gradesService;
-/*
-    @Autowired
-    private HttpServletRequest request;*/
+    private StudentGroupService studentGroupService;
 
 
     @GetMapping("/courses")
-    public String login(HttpSession session) {
+    public String login(HttpSession session, Model model) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
-            session.setAttribute("courses", courseService.getAllCourses());
-            session.setAttribute("subjects", subjectService.getAllSubjects()); // Ajoutez les matières
-            session.setAttribute("professors", professorService.getAllProfessors()); // Ajoutez les professeurs
+            model.addAttribute("courses", courseService.getAllCourses());
+            model.addAttribute("subjects", subjectService.getAllSubjects()); // Ajoutez les matières
+            model.addAttribute("professors", professorService.getAllProfessors()); // Ajoutez les professeurs
+            model.addAttribute("groups", studentGroupService.getAllStudentGroups()); // Ajouter les groupes
             return "course";
         }
         return "login";
@@ -48,6 +46,7 @@ public class CourseController {
                              @RequestParam("classroom") String classroom,
                              @RequestParam(required = false, value = "id") Long id,
                              @RequestParam("action") String action,
+                             @RequestParam("groupsId") List<Long> groupsId,
                              HttpSession session,
                              Model model) {
 
@@ -75,6 +74,17 @@ public class CourseController {
                     model.addAttribute("errorMessage", "Ce professeur ne peut pas enseigner cette matière");
                     return "course";
                 }
+                List<StudentGroup> studentGroups = new ArrayList<>();
+                StudentGroup studentGroup;
+                for (Long groupId : groupsId) {
+                    studentGroup = studentGroupService.getStudentGroupFromId(groupId);
+                    if (studentGroup == null) {
+                        model.addAttribute("errorMessage", "Groupes non valides");
+                        return "course";
+                    }
+                    studentGroups.add(studentGroup);
+                }
+                course.setStudentGroups(studentGroups);
                 course.setSubject(subject);
                 course.setProfessor(professor);
                 course.setClassroom(classroom);
@@ -87,7 +97,6 @@ public class CourseController {
                 return "redirect:/courses";
             }
             return "redirect:/courses";
-
         } else {
             return "error";
         }
