@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/courseOccurrence.css">
 
 <div class="main-content">
+	<h2>Gérer la plannification des cours</h2>
   <c:if test="${not empty errorMessage}">
     <p style="color: red;">${errorMessage}</p>
   </c:if>
@@ -12,11 +13,12 @@
 
     <c:forEach var="courseOccurrence" items="${courseOccurrences}">
       <div class="course-occurrence-item" onclick="openPopup(this, false, '${courseOccurrence.course.id}', '${courseOccurrence.category.id}', '${courseOccurrence.day}', '${courseOccurrence.beginning}', '${courseOccurrence.end}', '${courseOccurrence.id}')">
-        <h4>${courseOccurrence.course.subject.name} - ${courseOccurrence.day}</h4>
+        <h4>${courseOccurrence.course.subject.name}</h4>
+        <p>Le ${courseOccurrence.day.format(dateFormatter)}</p>
         <p>De ${courseOccurrence.beginning} à ${courseOccurrence.end}</p>
         <p>Catégorie : ${courseOccurrence.category.name}</p>
         <p>Avec : ${courseOccurrence.professor.firstName} ${courseOccurrence.professor.lastName}</p>
-        <p>Dans : ${courseOccurrence.classroom}</p>
+        <p>salle : ${courseOccurrence.classroom}</p>
       </div>
     </c:forEach>
 

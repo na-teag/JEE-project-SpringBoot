@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -39,6 +40,7 @@ public class CourseOccurrenceController {
             model.addAttribute("courses", courses);
             model.addAttribute("professors", professors);
             model.addAttribute("categories", categories);
+            model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             return "CourseOccurrence";
         }
         return "login";
