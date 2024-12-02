@@ -31,19 +31,23 @@ public class CourseOccurrenceController {
     @GetMapping("/CourseOccurrences")
     public String showScheduleForm(Model model, HttpSession session) {
         if (session.getAttribute("user") != null && Admin.class.getName().equals(session.getAttribute("role"))) {
-            List<CourseOccurrence> courseOccurrences = courseOccurrenceService.getAllCourseOccurrence();
-            List<Course> courses = courseService.getAllCourses();
-            List<Professor> professors = professorService.getAllProfessors();
-            List<ClassCategory> categories = classCategoryService.getAllClassCategories();
-
-            model.addAttribute("courseOccurrences", courseOccurrences);
-            model.addAttribute("courses", courses);
-            model.addAttribute("professors", professors);
-            model.addAttribute("categories", categories);
-            model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            setModelAttributes(model);
             return "CourseOccurrence";
         }
         return "login";
+    }
+
+    private void setModelAttributes(Model model){
+        List<CourseOccurrence> courseOccurrences = courseOccurrenceService.getAllCourseOccurrence();
+        List<Course> courses = courseService.getAllCourses();
+        List<Professor> professors = professorService.getAllProfessors();
+        List<ClassCategory> categories = classCategoryService.getAllClassCategories();
+
+        model.addAttribute("courseOccurrences", courseOccurrences);
+        model.addAttribute("courses", courses);
+        model.addAttribute("professors", professors);
+        model.addAttribute("categories", categories);
+        model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     @PostMapping("/CourseOccurrences")
@@ -67,7 +71,26 @@ public class CourseOccurrenceController {
                 LocalTime end = LocalTime.parse(endStr);
 
                 if ("save".equals(action)) {
-                    courseOccurrenceService.validateSchedule(day,beginning,end);
+                        if (day.getDayOfWeek().getValue() == 6 || day.getDayOfWeek().getValue() == 7) {
+                            model.addAttribute("errorMessage", "Les cours ne peuvent pas être planifiés un samedi ou un dimanche.");
+                            setModelAttributes(model);
+                            return "CourseOccurrence";
+                        }
+                        if (beginning.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(20, 0))) {
+                            model.addAttribute("errorMessage","Les cours doivent se dérouler entre 08h00 et 20h00.");
+                            setModelAttributes(model);
+                            return "CourseOccurrence";
+                        }
+                        if (beginning.getMinute() % 15 != 0 || end.getMinute() % 15 != 0) {
+                            model.addAttribute("errorMessage","Les horaires doivent finir en 00, 15, 30 ou 45 minutes.");
+                            setModelAttributes(model);
+                            return "CourseOccurrence";
+                        }
+                        if (!beginning.isBefore(end)) {
+                            model.addAttribute("errorMessage","L'heure de début doit être avant l'heure de fin.");
+                            setModelAttributes(model);
+                            return "CourseOccurrence";
+                        }
                     Course course = courseService.getSelectedCourse(courseId);
                     ClassCategory classCategory = classCategoryService.getClassCategory(classCategoryId);
                     Professor professor;
@@ -86,9 +109,11 @@ public class CourseOccurrenceController {
 
                     if (id == null) {
                         model.addAttribute("successMessage", "Nouvelle occurrence de cours enregistrée avec succès !");
+                        setModelAttributes(model);
                     } else {
                         courseOccurrence = courseOccurrenceService.getCourseOccurrenceById(id);
                         model.addAttribute("successMessage", "Occurrence de cours mise à jour avec succès !");
+                        setModelAttributes(model);
                     }
                     courseOccurrence.setCourse(course);
                     courseOccurrence.setProfessor(professor);
