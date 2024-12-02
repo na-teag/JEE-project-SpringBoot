@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -107,9 +108,11 @@ public class CourseOccurrenceService {
 		return schedule;
 	}
 
-	public void validateSchedule(LocalDate day, LocalTime beginning, LocalTime end) {
+	public void validateSchedule(LocalDate day, LocalTime beginning, LocalTime end, Model model) {
 		if (day.getDayOfWeek().getValue() == 6 || day.getDayOfWeek().getValue() == 7) {
-			throw new IllegalArgumentException("Les cours ne peuvent pas être planifiés un samedi ou un dimanche.");
+			model.addAttribute("errorMessage", "Les cours ne peuvent pas être planifiés un samedi ou un dimanche.");
+
+			//throw new IllegalArgumentException("Les cours ne peuvent pas être planifiés un samedi ou un dimanche.");
 		}
 		if (beginning.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(20, 0))) {
 			throw new IllegalArgumentException("Les cours doivent se dérouler entre 08h00 et 20h00.");
