@@ -48,13 +48,7 @@ public class ClasseService {
 			Classe classe = (Classe) studentGroup;
 			return List.of(classe);
 		}
-
-		try {
-			return classeRepository.findByPathwayOrPromo(studentGroup, studentGroup);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return classeRepository.findByPathwayOrPromo(studentGroup);
 	}
 
 	@Transactional
