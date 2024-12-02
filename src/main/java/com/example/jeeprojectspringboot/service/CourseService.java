@@ -87,6 +87,24 @@ public class CourseService {
 
     public List<Course> getCoursesBySubject(Subject subject) { return courseRepository.findBySubject(subject); }
 
+    public List<Course> getCoursesByClasse(Classe classe) {
+        List<Course> courses = new ArrayList<>();
+        courses.addAll(courseRepository.findByStudentGroupsContaining(classe));
+        courses.addAll(courseRepository.findByStudentGroupsContaining(classe.getPathway()));
+        courses.addAll(courseRepository.findByStudentGroupsContaining(classe.getPromo()));
+
+        // Suppression des doublons en utilisant un Set
+        Set<Long> seenIds = new HashSet<>();
+        List<Course> uniqueCourses = new ArrayList<>();
+
+        for (Course course : courses) {
+            if (seenIds.add(course.getId())) {
+                uniqueCourses.add(course);
+            }
+        }
+        return uniqueCourses;
+    }
+
 
     public Course saveCourse(Course course) {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class CourseController {
@@ -25,6 +24,9 @@ public class CourseController {
 
     @Autowired
     private StudentGroupService studentGroupService;
+
+    @Autowired
+    private ClasseService classeService;
 
 
     @GetMapping("/courses")
@@ -80,6 +82,7 @@ public class CourseController {
                     setModelAttributes(model);
                     return "course";
                 }
+
                 List<StudentGroup> studentGroups = new ArrayList<>();
                 StudentGroup studentGroup;
                 for (Long groupId : groupsId) {
@@ -89,49 +92,46 @@ public class CourseController {
                         setModelAttributes(model);
                         return "course";
                     }
-                    List<Course> coursesBySubject = courseService.getCoursesBySubject(subject);
-                    for(Course course1 : coursesBySubject){
-                        if(course1.getSubject().equals(subject)){
-                            if(course.getId() == null) {
-                                if (course1.getStudentGroups().contains(studentGroup)) {
-                                    model.addAttribute("errorMessage", "Au moins un des groupes sélectionnés a déja ce cours avec un autre professeur");
-                                    setModelAttributes(model);
-                                    return "course";
-                                } else if (course1.getProfessor().equals(professor)) {
-                                    model.addAttribute("errorMessage", "Au moins un des groupes sélectionnés a déja ce cours avec ce professeur");
-                                    setModelAttributes(model);
-                                    return "course";
-                                } else if(studentGroup instanceof Classe){
-                                    Classe classe = (Classe) studentGroup;
-                                    if(course1.getStudentGroups().contains(classe.getPromo()) || course1.getStudentGroups().contains(classe.getPathway())){
-                                        model.addAttribute("errorMessage", "Au moins un des groupes sélectionnés a déja ce cours avec ce professeur qui enseigne à toute une filière ou une promo");
-                                        setModelAttributes(model);
-                                        return "course";
-                                    }
-                                }
-                            } else {
-                                if (course1.getStudentGroups().contains(studentGroup) && course.getProfessor().equals(professor)) {
-                                    model.addAttribute("errorMessage", "Au moins un des groupes sélectionnés a déja ce cours avec un autre professeur");
-                                    setModelAttributes(model);
-                                    return "course";
-                                } else if(studentGroup instanceof Classe){
-                                    Classe classe = (Classe) studentGroup;
-                                    if(course1.getStudentGroups().contains(classe.getPromo()) || course1.getStudentGroups().contains(classe.getPathway())){
-                                        model.addAttribute("errorMessage", "Au moins un des groupes sélectionnés a déja ce cours avec ce professeur qui enseigne à toute une filière ou une promo");
-                                        setModelAttributes(model);
-                                        return "course";
-                                    }
-                                }
-                            }
-                        }
-                    }
                     studentGroups.add(studentGroup);
                 }
 
+
+                /*
+                 * vérifier que deux profs différents ne peuvent pas enseigner le même sujet a une même classe
+                 *
+                 */
                 course.setStudentGroups(studentGroups);
                 course.setSubject(subject);
                 course.setProfessor(professor);
                 course.setClassroom(classroom);
+                // ne pas sauvegarder pour l'instant
+
+
+                // identifier toutes les classes concernées (dans un set pour éviter les doublons)
+                Set<Classe> uniqueClasses = new HashSet<>();
+                for (StudentGroup group : studentGroups) {
+                    uniqueClasses.addAll(classeService.getClassesByStudentGroup(group));
+                }
+
+                // pour chaque classe
+                for(Classe classe : uniqueClasses) {
+                    Map<Long, Long> subjectProfessorMap = new HashMap<>();
+                    List<Course> courses = new ArrayList<>(courseService.getCoursesByClasse(classe));
+                    courses.add(course); // ajouter le cours dont on cherche à tester s'il est correcte
+                    // dans chaque cours
+                    for (Course course1 : courses) {
+                        // regarder quel professeur fait le cours du sujet
+                        if (subjectProfessorMap.containsKey(course1.getSubject().getId()) && !Objects.equals(subjectProfessorMap.get(course1.getSubject().getId()), course1.getProfessor().getId())) {
+                            // si on a déjà repertorié ce sujet avec un professeur différent, erreur
+                            model.addAttribute("errorMessage", "une classe ne peut pas avoir le même sujet enseigné par deux professeurs différents");
+                            setModelAttributes(model);
+                            return "course";
+                        }
+                        // sinon, répertorier le sujet et son professeur
+                        subjectProfessorMap.put(course1.getSubject().getId(), course1.getProfessor().getId());
+                    }
+                }
+
 
                 courseService.saveCourse(course);
                 return "redirect:/courses";
