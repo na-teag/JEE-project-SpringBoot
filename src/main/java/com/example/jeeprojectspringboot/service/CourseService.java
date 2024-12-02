@@ -87,6 +87,16 @@ public class CourseService {
 
     public List<Course> getCoursesBySubject(Subject subject) { return courseRepository.findBySubject(subject); }
 
+    public List<Course> getCoursesByStudentGroup(StudentGroup studentGroup) {
+        if (Promo.class.getName().equals(studentGroup.getClass().getName())) {
+            return courseRepository.findByStudentGroupsContaining((Promo)studentGroup);
+        } else if (Pathway.class.getName().equals(studentGroup.getClass().getName())) {
+            return courseRepository.findByStudentGroupsContaining((Pathway)studentGroup);
+        } else {
+            return getCoursesByClasse((Classe)studentGroup);
+        }
+    }
+
     public List<Course> getCoursesByClasse(Classe classe) {
         List<Course> courses = new ArrayList<>();
         courses.addAll(courseRepository.findByStudentGroupsContaining(classe));

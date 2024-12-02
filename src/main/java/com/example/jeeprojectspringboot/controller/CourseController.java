@@ -97,14 +97,30 @@ public class CourseController {
 
 
                 /*
-                 * vérifier que deux profs différents ne peuvent pas enseigner le même sujet a une même classe
-                 *
+                 * vérifier que deux profs différents ne peuvent pas enseigner le même sujet a une même classe, ou qu'une filière/promo n'a pas deux fois le même sujet de cours
+                 * le cas multiple autorisé étant qu'un prof d'info donne un cours à une Promo ou à une filière, et en plus, qu'il fasse cours des classes (des cours de CM à toute la filière et des cours de TD à une classe particulière, par exemple)
                  */
                 course.setStudentGroups(studentGroups);
                 course.setSubject(subject);
                 course.setProfessor(professor);
                 course.setClassroom(classroom);
                 // ne pas sauvegarder pour l'instant
+
+                for (StudentGroup studentGroup1 : studentGroups){
+                    if (Promo.class.getName().equals(studentGroup1.getClass().getName()) || Pathway.class.getName().equals(studentGroup1.getClass().getName())){
+                        for (Course course1 : courseService.getCoursesBySubject(course.getSubject())) {
+                            List<Long> coursesId = new ArrayList<>();
+                            for (Course course2 : courseService.getCoursesByStudentGroup(studentGroup1)){
+                                coursesId.add(course2.getId());
+                            }
+                            if (coursesId.contains(course1.getId())) {
+                                model.addAttribute("errorMessage", "une filière ou une promo ne peut pas avoir le même sujet de cours plusieurs fois");
+                                setModelAttributes(model);
+                                return "course";
+                            }
+                        }
+                    }
+                }
 
 
                 // identifier toutes les classes concernées (dans un set pour éviter les doublons)
