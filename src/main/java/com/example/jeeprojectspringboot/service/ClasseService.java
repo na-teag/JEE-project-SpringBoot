@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,11 +45,15 @@ public class ClasseService {
 
 	@Transactional
 	public List<Classe> getClassesByStudentGroup(StudentGroup studentGroup) {
-		if (Classe.class.getName().equals(studentGroup.getClass().getName())) {
+		if (studentGroup == null) {
+			return new ArrayList<>();
+		} else if (Classe.class.getName().equals(studentGroup.getClass().getName())) {
 			Classe classe = (Classe) studentGroup;
 			return List.of(classe);
+		} else if (Pathway.class.getName().equals(studentGroup.getClass().getName())) {
+			return classeRepository.findByPathway((Pathway) studentGroup);
 		}
-		return classeRepository.findByPathwayOrPromo(studentGroup);
+		return classeRepository.findByPromo((Promo) studentGroup);
 	}
 
 	@Transactional
