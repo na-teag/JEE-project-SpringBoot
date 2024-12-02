@@ -1,7 +1,8 @@
 package com.example.jeeprojectspringboot.repository;
 
 import com.example.jeeprojectspringboot.schoolmanager.Classe;
-import com.example.jeeprojectspringboot.schoolmanager.StudentGroup;
+import com.example.jeeprojectspringboot.schoolmanager.Pathway;
+import com.example.jeeprojectspringboot.schoolmanager.Promo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,11 @@ public interface ClasseRepository extends JpaRepository<Classe, Long> {
 
     Classe findById(long id);
     List<Classe> findAll();
-    List<Classe> findByPathwayOrPromo(StudentGroup studentGroup1, StudentGroup studentGroup2);
+
+    List<Classe> findByPathway(Pathway pathway);
+
+    List<Classe> findByPromo(Promo promo);
+
+
     void deleteById(Long id);
 }
